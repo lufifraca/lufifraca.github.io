@@ -1,0 +1,33 @@
+---
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  const projects = await getCollection("projects");
+  return projects.map(p => ({ params: { slug: p.data.slug }, props: { project: p } }));
+}
+
+const { project } = Astro.props;
+---
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>{project.data.title}</title>
+    <meta name="description" content={project.data.summary} />
+  </head>
+  <body style="margin:0;font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;">
+    <main style="max-width:900px;margin:0 auto;padding:24px;">
+      <a href="/projects" style="text-decoration:none;color:#2563eb;">← Back to Projects</a>
+      <h1 style="font-size:36px;margin:14px 0;">{project.data.title}</h1>
+      <div style="color:#6b7280;font-size:14px;margin-bottom:12px;">
+        {project.data.year} • {project.data.stack.join(", ")} • {project.data.role.join(", ")}
+      </div>
+      <article class="prose">
+        <slot />
+      </article>
+      <div style="margin-top:16px;display:flex;gap:12px;">
+        {project.data.repo ? <a href={project.data.repo} target="_blank" rel="noreferrer">Repository</a> : null}
+        {project.data.live ? <a href={project.data.live} target="_blank" rel="noreferrer">Play</a> : null}
+      </div>
+    </main>
+  </body>
+</html>
