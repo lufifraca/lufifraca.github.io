@@ -1,0 +1,88 @@
+:root {
+  --bg: #0b0f14;
+  --bg-soft: #0f141c;
+  --card: #121924;
+  --text: #e5e7eb;
+  --muted: #9ca3af;
+  --accent: #60a5fa;
+  --accent-2: #93c5fd;
+  --border: #1f2a37;
+  --shadow: 0 10px 25px rgba(0,0,0,.3);
+}
+
+* { box-sizing: border-box }
+html, body { height: 100% }
+body {
+  margin: 0;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, Apple Color Emoji, Segoe UI Emoji;
+  background: radial-gradient(1200px 800px at 70% -10%, rgba(96,165,250,.12), transparent 60%),
+              radial-gradient(900px 700px at -20% 20%, rgba(37,99,235,.10), transparent 60%),
+              var(--bg);
+  color: var(--text);
+}
+
+a { color: var(--text); text-decoration: none }
+a:hover { color: var(--accent) }
+
+.container { max-width: 1080px; margin: 0 auto; padding: 24px }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 18px;
+}
+.card {
+  background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.00));
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  transform: translateY(0) scale(1);
+  transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+  box-shadow: 0 0 0 rgba(0,0,0,0);
+}
+.card:hover {
+  transform: translateY(-2px) scale(1.01);
+  border-color: rgba(96,165,250,.55);
+  box-shadow: var(--shadow);
+}
+.thumb { width: 100%; height: 160px; object-fit: cover; background: #0c121a }
+.card-body { padding: 14px }
+.kicker { color: var(--muted); font-size: 12px; margin: 4px 0 }
+
+.btn {
+  display: inline-block; padding: 8px 12px; border-radius: 10px;
+  border: 1px solid var(--border); color: var(--text); text-decoration: none;
+  transition: border-color .18s ease, background-color .18s ease, transform .12s ease;
+}
+.btn:hover { border-color: var(--accent); transform: translateY(-1px) }
+.btn.primary { background: var(--accent); color: #0b1220; border-color: rgba(96,165,250,.6) }
+.btn.primary:hover { background: var(--accent-2) }
+
+.header-wrap {
+  position: sticky; top: 0; z-index: 50;
+  backdrop-filter: blur(8px);
+  background: color-mix(in oklab, var(--bg), rgba(255,255,255,.08) 6%);
+  border-bottom: 1px solid var(--border);
+}
+.header { max-width: 1080px; margin: 0 auto; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center }
+.nav { list-style: none; display: flex; gap: 10px; margin:0; padding:0 }
+.logo { font-weight: 700; letter-spacing: .2px }
+
+h1 { font-size: 36px; margin: 10px 0 }
+h2 { font-size: 24px; margin: 20px 0 10px }
+p  { color: var(--text); opacity: .92; max-width: 70ch }
+
+.hr { border: 0; border-top: 1px solid var(--border); margin: 24px 0; opacity: .7 }
+
+/* Dynamic island */
+#island {
+  position: fixed; left: -9999px; top: -9999px;
+  width: 140px; height: 36px; border-radius: 100px;
+  background: linear-gradient(180deg, #111827, #0f1623);
+  border: 1px solid var(--border);
+  box-shadow: 0 8px 24px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.04);
+  color: #bcd2ff; display: flex; align-items: center; justify-content: center;
+  font-size: 13px; pointer-events: none;
+  transition: width .18s ease, height .18s ease, opacity .2s ease;
+  opacity: .85;
+}
+@media (max-width: 640px) { #island { display: none } }

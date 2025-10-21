@@ -1,0 +1,28 @@
+---
+const label = "Explore →";
+---
+<div id="island" aria-hidden="true">{label}</div>
+
+<script>
+  const el = document.getElementById("island");
+  let x = innerWidth/2, y = innerHeight/2, tx = x, ty = y;
+  let raf;
+
+  function loop() {
+    x += (tx - x) * 0.12;
+    y += (ty - y) * 0.12;
+    el.style.transform = `translate(${x - 70}px, ${y - 18}px)`;
+    raf = requestAnimationFrame(loop);
+  }
+
+  window.addEventListener("mousemove", (e) => {
+    tx = e.clientX; ty = e.clientY;
+    if (!raf) raf = requestAnimationFrame(loop);
+  });
+
+  document.addEventListener("mouseover", (e) => {
+    const a = e.target.closest("a");
+    if (a && a.href) el.textContent = a.getAttribute("aria-label") || "Open";
+    else el.textContent = "Explore →";
+  });
+</script>
