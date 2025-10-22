@@ -3,13 +3,13 @@ import Header from "../components/Header.astro";
 import DynamicIsland from "../components/DynamicIsland.astro";
 
 const timeline = [
-  { date: "Summer 2025", title: "Game Design Intern — 505 Games (Avantgarden), Milan", blurb: "Prototyping and documentation for an upcoming launch. Narrative flows, world map splines." },
-  { date: "May 2025",   title: "Volunteer — GamesBeat Summit, Los Angeles", blurb: "Registration and speaker coordination." },
-  { date: "Mar 2025",   title: "Volunteer — GamesBeat Crossfire Lounge, San Francisco", blurb: "GDC week check-in and networking." },
-  { date: "Summer 2024",title: "Game Design Intern — 505 Games (Avantgarden), Milan", blurb: "UE5 cave pieces and dungeon maps. QA on Brothers remake. Narrative plugin states." },
-  { date: "2023",       title: "Unity 3D — Gunslinger Hilda", blurb: "Enemy AI states and power-ups in team combat prototype." },
-  { date: "2023",       title: "Unity 2.5D — Neon Navigator", blurb: "Level flow, encounters, and energy-based weapon loop." },
-  { date: "2022–2025",  title: "B.S. Computer Science — Cal Poly Pomona", blurb: "Data structures, algorithms, systems, OOP, game dev, C and C++." }
+  { date: "Summer 2025", title: "Game Design Intern — 505 Games (Avantgarden), Milan", blurb: " Implemented dialogue and quest transitions with the Narrative plugin for an early access MVP. Added world-map splines enabling fluid bridge building around the island. Worked fully in Italian and relocated for the internship for the second year in a row." },
+  { date: "May 2025",   title: "Volunteer — GamesBeat Summit, Los Angeles", blurb: "Supported registration, attendee assistance, and speaker coordination. Engaged with developers, publishers, and investors to expand industry knowledge and network." },
+  { date: "Mar 2025",   title: "Volunteer — GamesBeat Crossfire Lounge, San Francisco", blurb: "Managed check-in and networking sessions at an intimate, high-profile event. Built connections with professionals between panels and during post-session networking." },
+  { date: "Summer 2024",title: "Game Design Intern — 505 Games (Avantgarden Games), Milan", blurb: "Prototyped and documented features for an upcoming launch, improving team design workflow.  Built modular pieces and designed dungeon maps in UE5 for cave environments. Tested <em>Brothers: A Tale of Two Sons Remake</em>, and helped stabilize development." },
+  { date: "Sep 2023 - Dec 2023",       title: "Unity 3D — Gunslinger Hilda", blurb: "Built enemy AI behavior; collaborated on shooting mechanics and bullet power-ups, Integrated AI with combat systems in a team setting." },
+  { date: "Feb 2023 - May 2023",       title: "Unity 2.5D — Neon Navigator", blurb: "Designed level flow and event sequencing for encounters and resource pacing, Implemented a cursor-aimed laser shooter with energy consumption." },
+  { date: "2022–2025",  title: "B.S. Computer Science — Cal Poly Pomona", blurb: "Relevant Courses: Data structures, Design and Analysis of Algorithms, Systems Programming, OOP, Game Dev, C and C++." }
 ];
 ---
 <html lang="en">
@@ -23,11 +23,11 @@ const timeline = [
     <Header />
     <DynamicIsland />
     <main class="container" style="max-width:960px">
-      <h1>About</h1>
+      <h1>About me</h1>
       <p>
-        I study computer science and build small but polished game projects.
-        I enjoy graphics, input feel, and performance profiling. I have experience in Unity and Unreal,
-        including an Italian language internship team in Milan.
+        I study computer science at Cal Poly Pomona, and have an interest in Game Development. I've done multiple projects in Unity and Unreal Engine, 
+        and have real world experience, having interned 2 consecutive summers at 505 Games in Milan, Italy. Below is a timeline including projects that I've done,
+        and relevant experiences that I have participated in.
       </p>
       <div style="margin:20px 0; display:flex; gap:12px; flex-wrap:wrap;">
         <a class="btn primary" href="/cv.pdf" target="_blank" rel="noreferrer">Open resume</a>
@@ -44,7 +44,7 @@ const timeline = [
               <div class="kicker">{item.date}</div>
               <details style="border:1px solid var(--border); border-radius:12px; padding:10px 12px; background: var(--bg-soft)" {i === 0 ? 'open' : ''}>
                 <summary style="cursor:pointer; font-weight:600">{item.title}</summary>
-                <p style="margin:8px 0 6px">{item.blurb}</p>
+                <p style="margin:8px 0 6px" set:html={item.blurb}></p>
               </details>
             </div>
           </li>

@@ -1,30 +1,120 @@
 ---
 import Header from "../components/Header.astro";
 import DynamicIsland from "../components/DynamicIsland.astro";
+
+// Timeline content (you can edit copy or add <em>…</em> with the set:html trick below)
+const timeline = [
+  { date: "Summer 2025", title: "Game Design Intern — 505 Games (Avantgarden), Milan", blurb: " Implemented dialogue and quest transitions with the Narrative plugin for an early access MVP. Added world-map splines enabling fluid bridge building around the island. Worked fully in Italian and relocated for the internship for the second year in a row." },
+  { date: "May 2025",   title: "Volunteer — GamesBeat Summit, Los Angeles", blurb: "Supported registration, attendee assistance, and speaker coordination. Engaged with developers, publishers, and investors to expand industry knowledge and network." },
+  { date: "Mar 2025",   title: "Volunteer — GamesBeat Crossfire Lounge, San Francisco", blurb: "Managed check-in and networking sessions at an intimate, high-profile event. Built connections with professionals between panels and during post-session networking." },
+  { date: "Summer 2024",title: "Game Design Intern — 505 Games (Avantgarden Games), Milan", blurb: "Prototyped and documented features for an upcoming launch, improving team design workflow.  Built modular pieces and designed dungeon maps in UE5 for cave environments. Tested <em>Brothers: A Tale of Two Sons Remake</em>, and helped stabilize development." },
+  { date: "Sep 2023 - Dec 2023",       title: "Unity 3D — Gunslinger Hilda", blurb: "Built enemy AI behavior; collaborated on shooting mechanics and bullet power-ups, Integrated AI with combat systems in a team setting." },
+  { date: "Feb 2023 - May 2023",       title: "Unity 2.5D — Neon Navigator", blurb: "Designed level flow and event sequencing for encounters and resource pacing, Implemented a cursor-aimed laser shooter with energy consumption." },
+  { date: "2022–2025",  title: "B.S. Computer Science — Cal Poly Pomona", blurb: "Relevant Courses: Data structures, Design and Analysis of Algorithms, Systems Programming, OOP, Game Dev, C and C++." }
+];
 ---
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <title>Home • Luca Ficano Latimer</title>
-    <meta name="description" content="Game dev and CS portfolio. Dark theme, fast, clean animations." />
+    <meta name="description" content="Game dev and CS portfolio. Hero + About + Timeline on one page." />
     <link rel="stylesheet" href="/site.css">
+    <style>
+      /* layout tweaks for hero and anchors */
+      .hero {
+        display: grid;
+        grid-template-columns: 1.2fr .9fr;
+        gap: 28px;
+        align-items: center;
+      }
+      .hero h1 { font-size: 48px; line-height: 1.1; margin: 10px 0 12px }
+      .hero p { font-size: 18px }
+      .hero-img-wrap {
+        justify-self: end;
+        width: min(460px, 40vw);
+        aspect-ratio: 4/5;
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+        background: #0c121a;
+      }
+      .hero-img { width:100%; height:100%; object-fit: cover }
+      /* anchor offset so the sticky header doesn't cover headings */
+      :target { scroll-margin-top: 84px }
+      /* section spacing */
+      section { padding: 32px 0 }
+      .about p { max-width: 70ch }
+      /* timeline visuals */
+      .tl-line { position:absolute; left:10px; top:0; bottom:0; width:2px; background: var(--border) }
+      .tl-dot { width:22px; height:22px; border-radius:9999px; background: var(--accent); box-shadow: 0 0 0 4px rgba(96,165,250,.12) }
+      details { border:1px solid var(--border); border-radius:12px; padding:10px 12px; background: var(--bg-soft) }
+      @media (max-width: 900px) {
+        .hero { grid-template-columns: 1fr; }
+        .hero-img-wrap { justify-self: start; width: min(520px, 90vw); }
+      }
+    </style>
   </head>
   <body>
     <Header />
     <DynamicIsland />
+
     <main class="container">
-      <h1>Hello. I build game and CS projects.</h1>
-      <p>
-        I focus on Unity, Unreal, and core CS skills. This site shows a few projects,
-        a short timeline, and a resume link. It is clean, fast, and ready for live demos.
-      </p>
-      <div style="margin-top:16px; display:flex; gap:12px; flex-wrap:wrap;">
-        <a class="btn primary" href="/projects" aria-label="View projects">View projects</a>
-        <a class="btn" href="/about" aria-label="About">About</a>
-      </div>
-      <hr class="hr" />
-      <h2>Highlights</h2>
-      <p>Jump straight to Projects to see the card grid. You can add videos, gifs, or playable WebGL builds later.</p>
+
+      <!-- HERO -->
+      <section class="hero">
+        <div>
+          <h1>Hi, I’m Luca.</h1>
+          <p>
+            I build game and CS projects in Unity and Unreal with a focus on input feel,
+            visuals, and performance. Scroll for a short about, timeline, and resume.
+          </p>
+          <div style="margin-top:16px; display:flex; gap:12px; flex-wrap:wrap;">
+            <a class="btn primary" href="/projects" aria-label="View projects">View projects</a>
+            <a class="btn" href="#about" aria-label="About section">About</a>
+            <a class="btn" href="/cv.pdf" target="_blank" rel="noreferrer" aria-label="Open resume">Resume</a>
+          </div>
+        </div>
+        <div class="hero-img-wrap">
+          <img class="hero-img" src="/images/luca-hero.jpg" alt="Photo of Luca Ficano Latimer">
+        </div>
+      </section>
+
+      <!-- ABOUT -->
+      <section id="about" class="about">
+        <h2>About</h2>
+        <p>
+          I study computer science and build small but polished game projects.
+          I enjoy graphics, input feel, and performance profiling. I have experience in Unity and Unreal,
+          including Italian-language work with a team in Milan.
+        </p>
+        <div style="margin:20px 0; display:flex; gap:12px; flex-wrap:wrap;">
+          <a class="btn primary" href="/cv.pdf" target="_blank" rel="noreferrer">Open resume</a>
+          <a class="btn" href="/projects">View projects</a>
+        </div>
+      </section>
+
+      <!-- TIMELINE -->
+      <section id="timeline">
+        <h2>Timeline</h2>
+        <ol style="list-style:none; margin:0; padding:0; position:relative;">
+          <div class="tl-line"></div>
+          {timeline.map((item, i) => (
+            <li style="display:flex; gap:16px; margin:18px 0;">
+              <div class="tl-dot"></div>
+              <div>
+                <div class="kicker">{item.date}</div>
+                <!-- If you want italics inside blurbs, use set:html and put <em> in item.blurb -->
+                <details {i === 0 ? 'open' : ''}>
+                  <summary style="cursor:pointer; font-weight:600">{item.title}</summary>
+                  <p style="margin:8px 0 6px" set:html={item.blurb}></p>
+                </details>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </section>
+
     </main>
   </body>
 </html>
