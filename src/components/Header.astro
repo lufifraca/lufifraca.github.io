@@ -1,23 +1,104 @@
 ---
-import { SITE_TITLE } from "../consts";
-const resumeUrl = "/cv.pdf"; // put your resume at public/cv.pdf
-const title = "Luca Ficano Latimer’s Portfolio";
+const resumeUrl = "/cv.pdf"; // put your PDF at public/cv.pdf
 ---
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/site.css">
 
-<header class="header-wrap">
-  <div class="header">
-    <a href="/" class="logo">{title}</a>
-    <ul class="nav">
-      <li><a class="btn" href="/">Home</a></li>
-      <li><a class="btn" href="/projects">Projects</a></li>
-      <!-- Jump to the About section on the same page -->
-      <li><a class="btn" href="/#about">About</a></li>
-      <li><a class="btn primary" href={resumeUrl} target="_blank" rel="noreferrer">Resume</a></li>
-    </ul>
+<!-- Sticky transparent bar that holds a centered “notch” -->
+<header class="notch-bar" aria-label="Site navigation">
+  <!-- The notch itself -->
+  <div class="notch">
+    <nav class="notch-nav" aria-label="Primary">
+      <a class="chip" href="/" aria-label="Home">Home</a>
+      <a class="chip" href="/projects" aria-label="Projects">Projects</a>
+      <a class="chip primary" href={resumeUrl} target="_blank" rel="noreferrer" aria-label="Resume">Resume</a>
+    </nav>
   </div>
 </header>
 
+<style>
+/* notch container */
+.notch-bar{
+  position: sticky; top: 0; z-index: 60;
+  height: 72px;
+  display: grid; place-items: center;
+  /* make the bar opaque */
+  background: var(--bg);
+  border-bottom: none;
+}
+
+/* overlay that darkens the bar but leaves the notch area transparent */
+.notch-bar::before{
+  content: "";
+  position: absolute; inset: 0; z-index: 2;
+  /* fully opaque overlay color */
+  background: rgba(11,16,32,1);
+  display: block;
+  pointer-events: none;
+  /* default notch hole size (tweak as needed or set in a parent/root) */
+  --notch-w: 220px; /* width of the transparent notch area */
+  --notch-h: 56px;  /* height of the transparent notch area */
+  /* center the hole horizontally and vertically within the bar */
+  --notch-x: 50%;
+  --notch-y: 50%;
+  /* create an elliptical hole using mask and radial-gradient */
+  -webkit-mask: radial-gradient(ellipse var(--notch-w) var(--notch-h) at var(--notch-x) var(--notch-y), transparent 0, transparent 50%, black 50.1%);
+  mask: radial-gradient(ellipse var(--notch-w) var(--notch-h) at var(--notch-x) var(--notch-y), transparent 0, transparent 50%, black 50.1%);
+}
+
+/* the notch shape */
+.notch{
+  position: relative; z-index: 3; /* sit above the bar overlay */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 14px;
+  border-radius: 999px;
+  /* make the notch itself transparent so the overlay shows a hole */
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.06); /* subtle outline if desired */
+  box-shadow:
+    0 12px 28px rgba(0,0,0,.45);
+}
+
+/* subtle “ears” to mimic the iPhone dynamic island silhouette */
+.notch::before,
+.notch::after{
+  content: "";
+  position:absolute; top: 10px; width: 18px; height: 18px;
+  background: transparent; /* keep "ears" transparent so notch hole is continuous */
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 999px;
+  filter: blur(.2px);
+}
+.notch::before{ left: -10px }
+.notch::after { right: -10px }
+
+/* nav inside the notch */
+.notch-nav{ display:flex; gap:10px }
+
+/* pills for links */
+.chip{
+  display:inline-block;
+  padding:8px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  color: var(--text);
+  text-decoration: none;
+  transition: border-color .18s ease, transform .12s ease, background .18s ease, color .18s ease;
+}
+.chip:hover{ border-color: var(--accent); transform: translateY(-1px) }
+.chip.primary{
+  background: var(--accent);
+  color: #0b1220;
+  border-color: rgba(96,165,250,.6);
+}
+.chip.primary:hover{ background: var(--accent-2) }
+
+/* compact on small screens */
+@media (max-width: 520px){
+  .notch{ padding:6px 10px }
+  .chip{ padding:6px 10px; font-size: 14px }
+  .notch::before, .notch::after{ display:none }
+}
+</style>
 

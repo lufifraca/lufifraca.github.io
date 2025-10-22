@@ -1,0 +1,221 @@
+.timeline-wrap {
+  padding: 60px 0;
+  position: relative;
+  width: 100%;
+  min-height: 800px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 40px 0;
+}
+
+.timeline-wrap h2 {
+  text-align: center;
+  margin-bottom: 40px;
+  font-size: 28px;
+}
+
+/* Main circle */
+.timeline-circle {
+  position: relative;
+  width: 800px;
+  height: 800px;
+  margin: 0 auto;
+  transform-origin: center center;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.circle-base {
+  position: absolute;
+  inset: 100px;
+  border: 2px solid rgba(96,165,250,0.15);
+  border-radius: 50%;
+  box-shadow: 
+    inset 0 0 50px rgba(96,165,250,0.1),
+    0 0 30px rgba(96,165,250,0.05);
+}
+
+.circle-progress {
+  position: absolute;
+  inset: 100px;
+  border: 2px solid var(--accent);
+  border-radius: 50%;
+  opacity: 0.4;
+  filter: drop-shadow(0 0 15px var(--accent));
+  animation: pulse 4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { filter: drop-shadow(0 0 15px var(--accent)); opacity: 0.4; }
+  50% { filter: drop-shadow(0 0 25px var(--accent)); opacity: 0.6; }
+}
+
+/* Timeline points */
+.timeline-point {
+  --marker-size: 16px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+}
+
+.point-marker {
+  position: absolute;
+  width: var(--marker-size);
+  height: var(--marker-size);
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Add a counter-rotation to keep marker upright */
+  transform-origin: center center;
+  transform: translate(-50%, -50%) rotate(calc(var(--angle) * -1));
+}
+
+.point-marker::before {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  background: var(--accent);
+  border-radius: 50%;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 
+    0 0 15px var(--accent),
+    0 0 30px rgba(96,165,250,0.4);
+}
+
+.point-marker::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border: 2px solid var(--accent);
+  border-radius: 50%;
+  opacity: 0.3;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glow {
+  position: absolute;
+  inset: -12px;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, var(--accent) 0%, transparent 70%);
+  opacity: 0;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  filter: blur(8px);
+}
+
+/* Info cards */
+.info-card {
+  position: absolute;
+  left: 30px;
+  top: 50%;
+  width: 300px;
+  background: linear-gradient(135deg, 
+    rgba(15,22,36,0.85), 
+    rgba(11,16,27,0.95)
+  );
+  border: 1px solid rgba(96,165,250,0.2);
+  border-radius: 16px;
+  padding: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 
+    0 8px 32px rgba(0,0,0,0.5),
+    0 2px 8px rgba(96,165,250,0.2),
+    inset 0 1px 1px rgba(255,255,255,0.05);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  
+  /* Counter-rotate and position the card */
+  transform-origin: left center;
+  transform: translateY(-50%) scale(0.95) rotate(calc(var(--angle) * -1));
+}
+
+.card-date {
+  color: var(--accent);
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.info-card h3 {
+  margin: 0 0 8px;
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+.info-card p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  opacity: 0.9;
+}
+
+.card-image {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-top: 12px;
+}
+
+/* Hover effects */
+.timeline-point:hover .point-marker {
+  transform: translate(-50%, -50%) rotate(calc(var(--angle) * -1)) scale(1.8);
+}
+
+.timeline-point:hover .point-marker::before {
+  background: #fff;
+  box-shadow: 
+    0 0 20px var(--accent),
+    0 0 40px rgba(96,165,250,0.6);
+}
+
+.timeline-point:hover .point-marker::after {
+  transform: scale(1.5);
+  opacity: 0.6;
+}
+
+.timeline-point:hover .glow {
+  opacity: 0.6;
+  transform: scale(2);
+}
+
+.timeline-point:hover .info-card,
+.timeline-point.active .info-card {
+  opacity: 1;
+  transform: translateY(-50%) scale(1) rotate(calc(var(--angle) * -1));
+  pointer-events: auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+  .timeline-circle {
+    width: 600px;
+    height: 600px;
+  }
+  
+  .timeline-point {
+    transform: rotate(var(--angle)) translateX(250px);
+  }
+  
+  .info-card {
+    width: 260px;
+  }
+}
+
+@media (max-width: 640px) {
+  .timeline-circle {
+    width: 400px;
+    height: 400px;
+  }
+  
+  .timeline-point {
+    transform: rotate(var(--angle)) translateX(170px);
+  }
+  
+  .info-card {
+    width: 220px;
+    font-size: 14px;
+  }
+}

@@ -1,0 +1,248 @@
+.timeline-section {
+  padding: 120px 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 800px;
+  width: 100%;
+  z-index: 1;
+  /* allow arc glows and cards to overflow outside the section */
+  overflow: visible;
+}
+
+.timeline-section h2 {
+  text-align: center;
+  margin-bottom: 40px;
+  font-size: 28px;
+}
+
+/* Main circle container */
+.timeline-circle {
+  position: relative;
+  width: 600px;
+  height: 600px;
+  margin: 0 auto;
+}
+
+/* SVG arc overlay (glow + stroke) */
+.timeline-arc {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.timeline-arc__glow {
+  stroke: rgba(96,165,250,0.08);
+  stroke-width: 18;
+  filter: blur(8px);
+  stroke-linecap: round;
+}
+
+.timeline-arc__stroke {
+  stroke: var(--accent);
+  stroke-width: 3;
+  stroke-linecap: round;
+  opacity: 0.95;
+  filter: drop-shadow(0 8px 24px rgba(33,150,243,0.12));
+}
+
+.points-container {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  z-index: 3;
+}
+
+/* Base circle */
+.circle-base {
+  position: absolute;
+  inset: 50px;
+  border: 2px solid rgba(96,165,250,0.15);
+  border-radius: 50%;
+  box-shadow: 
+    inset 0 0 50px rgba(96,165,250,0.1),
+    0 0 30px rgba(96,165,250,0.05);
+}
+
+.circle-progress {
+  position: absolute;
+  inset: 50px;
+  border: 2px solid var(--accent);
+  border-radius: 50%;
+  opacity: 0.4;
+  filter: drop-shadow(0 0 15px var(--accent));
+  animation: pulse 4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { filter: drop-shadow(0 0 15px var(--accent)); opacity: 0.4; }
+  50% { filter: drop-shadow(0 0 25px var(--accent)); opacity: 0.6; }
+}
+
+/* Points */
+.timeline-point {
+  --marker-size: 16px;
+  position: absolute;
+  transform-origin: center center;
+  z-index: 4;
+}
+
+.point-marker {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--marker-size);
+  height: var(--marker-size);
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.point-marker:focus {
+  outline: 2px solid rgba(96,165,250,0.6);
+  outline-offset: 4px;
+}
+
+.point-marker::before {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  background: var(--accent);
+  border-radius: 50%;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 
+    0 0 15px var(--accent),
+    0 0 30px rgba(96,165,250,0.4);
+}
+
+.point-marker::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border: 2px solid var(--accent);
+  border-radius: 50%;
+  opacity: 0.3;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glow {
+  position: absolute;
+  inset: -12px;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, var(--accent) 0%, transparent 70%);
+  opacity: 0;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  filter: blur(8px);
+}
+
+/* Info cards */
+.info-card {
+  position: absolute;
+  /* center the card horizontally under the marker */
+  left: 50%;
+  top: 22px;
+  transform: translate(-50%, 0) scale(0.95);
+  width: 300px;
+  background: linear-gradient(135deg, 
+    rgba(15,22,36,0.95), 
+    rgba(11,16,27,0.98)
+  );
+  border: 1px solid rgba(96,165,250,0.2);
+  border-radius: 16px;
+  padding: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 
+    0 8px 32px rgba(0,0,0,0.5),
+    0 2px 8px rgba(96,165,250,0.2),
+    inset 0 1px 1px rgba(255,255,255,0.05);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.card-date {
+  color: var(--accent);
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.info-card h3 {
+  margin: 0 0 8px;
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+.info-card p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  opacity: 0.9;
+}
+
+.card-image {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-top: 12px;
+}
+
+/* Hover effects */
+.timeline-point:hover .point-marker,
+.timeline-point.active .point-marker {
+  transform: translate(-50%, -50%) scale(1.8);
+}
+
+.timeline-point:hover .point-marker::before,
+.timeline-point.active .point-marker::before {
+  background: #fff;
+  box-shadow: 
+    0 0 20px var(--accent),
+    0 0 40px rgba(96,165,250,0.6);
+}
+
+.timeline-point:hover .point-marker::after,
+.timeline-point.active .point-marker::after {
+  transform: scale(1.5);
+  opacity: 0.6;
+}
+
+.timeline-point:hover .glow,
+.timeline-point.active .glow {
+  opacity: 0.6;
+  transform: scale(2);
+}
+
+.timeline-point:hover .info-card,
+.timeline-point.active .info-card {
+  opacity: 1;
+  transform: translate(-50%, 12px) scale(1);
+  pointer-events: auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+  .timeline-circle {
+    width: 500px;
+    height: 500px;
+  }
+}
+
+@media (max-width: 640px) {
+  .timeline-circle {
+    width: 300px;
+    height: 300px;
+  }
+  
+  .info-card {
+    width: 220px;
+    font-size: 14px;
+  }
+}

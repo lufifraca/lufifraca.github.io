@@ -2,6 +2,7 @@
 import Header from "../components/Header.astro";
 import DynamicIsland from "../components/DynamicIsland.astro";
 import { getCollection } from "astro:content";
+
 const items = await getCollection("projects").catch(() => []);
 const projects = items.sort((a,b) => a.data.order - b.data.order);
 ---
