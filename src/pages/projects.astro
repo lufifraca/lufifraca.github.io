@@ -27,23 +27,33 @@ const projects = items.sort((a,b) => a.data.order - b.data.order);
       .p-meta{ color:rgba(200,220,255,.7); font-size:12px; margin-bottom:6px }
       .p-summary{ margin:0; font-size:13px; opacity:.9 }
 
-      .overlay{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; background: rgba(7,10,18,.6); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); z-index:80; }
-      .overlay.show{ display:flex }
-      .modal{ width:min(900px, 92vw); border-radius:16px; border:1px solid rgba(96,165,250,.25); background: linear-gradient( to bottom right, rgba(13,20,34,.98), rgba(9,14,24,.98)); box-shadow: 0 18px 60px rgba(0,0,0,.55); transform: translateY(8px) scale(.98); opacity:0; transition: transform .18s ease, opacity .18s ease; }
+      .overlay{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; background: rgba(7,10,18,.4); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); z-index:80; opacity:0; transition: opacity .22s ease; }
+      .overlay.show{ display:flex; opacity:1 }
+      /* Perf mode: tone down heavy effects while playing video */
+      .overlay.perf{ background: rgba(7,10,18,.8); backdrop-filter: none; -webkit-backdrop-filter: none; }
+      .overlay.perf .modal{ box-shadow: 0 10px 30px rgba(0,0,0,.5); }
+      .modal{ width:min(1160px, 96vw); max-height:92vh; display:flex; flex-direction:column; border-radius:16px; border:1px solid rgba(96,165,250,.25); background: linear-gradient( to bottom right, rgba(13,20,34,.98), rgba(9,14,24,.98)); box-shadow: 0 18px 60px rgba(0,0,0,.55); transform-origin: var(--ox, 50vw) var(--oy, 50vh); transform: translateY(8px) scale(.92); opacity:0; transition: transform .22s cubic-bezier(.18,.84,.3,1), opacity .22s ease; }
       .overlay.show .modal{ transform: translateY(0) scale(1); opacity:1 }
       .modal-header{ display:flex; align-items:center; justify-content:space-between; padding:14px 16px; border-bottom:1px solid rgba(255,255,255,.06) }
       .modal-title{ font-size:18px; font-weight:700 }
       .close-btn{ background:transparent; border:1px solid var(--border); color:var(--text); border-radius:8px; padding:6px 10px; cursor:pointer }
       .close-btn:hover{ border-color: var(--accent) }
-      .modal-body{ display:grid; grid-template-columns: 1.4fr 1fr; gap:16px; padding:14px 16px }
-      .media{ border-radius:12px; overflow:hidden; background:#0a1120; border:1px solid rgba(255,255,255,.06); aspect-ratio:16/9 }
-      .media iframe, .media video, .media img{ width:100%; height:100%; display:block; object-fit:contain; background:#000; border:0 }
+      .modal-body{ display:grid; grid-template-columns: minmax(0,1.5fr) minmax(0,1fr); gap:18px; padding:14px 16px; max-height: calc(92vh - 60px); overflow:auto; align-items:start }
+      .media{ position:relative; border-radius:12px; overflow:hidden; background:#0a1120; border:1px solid rgba(255,255,255,.06); min-width:0; will-change: transform }
+      .info{ min-width:0 }
+      /* ratio wrapper to ensure correct fit for any media */
+      .fitbox{ position:relative; width:100%; height:auto; aspect-ratio: var(--ar, 16/9); background:#000 }
+      .fitbox > *{ position:absolute; inset:0; width:100%; height:100%; border:0; display:block; object-fit:contain; object-position:center center; will-change: transform; transform: translateZ(0); }
+      .media{ align-self: start }
+      /* extra safety to beat any inherited rules */
+      .media video, .media iframe, .media img{ object-fit:contain !important; object-position:center center; }
       .info small{ color:rgba(200,220,255,.7) }
       .chips{ display:flex; gap:6px; flex-wrap:wrap; margin:8px 0 }
       .chip{ font-size:12px; border:1px solid var(--border); padding:4px 8px; border-radius:999px }
       .actions{ display:flex; gap:10px; margin-top:12px; flex-wrap:wrap }
       .actions a{ text-decoration:none }
-      @media (max-width: 820px){ .modal-body{ grid-template-columns: 1fr; } }
+      @media (max-width: 980px){ .modal{ width:min(96vw, 900px); } .modal-body{ grid-template-columns: 1fr; } }
+      @media (prefers-reduced-motion: reduce){ .overlay, .modal{ transition: none !important; } }
     </style>
   </head>
   <body>
@@ -110,25 +120,66 @@ const projects = items.sort((a,b) => a.data.order - b.data.order);
 
         function embedMedia({ video, thumb }){
           mediaEl.innerHTML = '';
+          const wrap = document.createElement('div');
+          wrap.className = 'fitbox';
+          mediaEl.appendChild(wrap);
+          // Do not pre-set AR from thumb when there is a video; we will use the video metadata for exact aspect.
           if (video) {
             const isYouTube = /youtu\.be|youtube\.com/.test(video);
             if (isYouTube){
+              const baseUrl = video.includes('embed') ? video : video.replace('watch?v=','embed/');
+              const sep = baseUrl.includes('?') ? '&' : '?';
+              const url = `${baseUrl}${sep}rel=0&modestbranding=1&playsinline=1&enablejsapi=1&mute=1`;
               const iframe = document.createElement('iframe');
-              iframe.src = video.includes('embed') ? video : video.replace('watch?v=','embed/');
+              iframe.src = url;
               iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
               iframe.allowFullscreen = true;
-              mediaEl.appendChild(iframe);
+              iframe.setAttribute('title','Project video');
+              iframe.setAttribute('data-yt','1');
+              wrap.appendChild(iframe);
+              // Assume playback when interacting with iframe; enable perf mode
+              overlay.classList.add('perf');
               return;
             }
             if (/\.mp4$|\.webm$/.test(video)){
               const v = document.createElement('video');
-              v.controls = true; v.src = video; mediaEl.appendChild(v); return;
+              v.controls = true; v.src = video;
+              v.style.objectFit = 'contain'; v.style.objectPosition = 'center';
+              v.style.width = '100%'; v.style.height = '100%';
+              v.muted = true; v.playsInline = true; v.preload = 'metadata';
+              if (thumb) v.poster = thumb;
+              v.addEventListener('play', ()=> overlay.classList.add('perf'));
+              v.addEventListener('pause', ()=> overlay.classList.remove('perf'));
+              v.addEventListener('ended', ()=> overlay.classList.remove('perf'));
+              wrap.appendChild(v); return;
             }
           }
-          if (thumb) { const img = document.createElement('img'); img.src = thumb; img.alt=''; mediaEl.appendChild(img); }
+          if (thumb) { const img = document.createElement('img'); img.src = thumb; img.alt=''; img.style.objectFit='contain'; img.style.objectPosition='center'; wrap.appendChild(img); }
         }
 
-        function openModal(data){
+        // Dynamically fit the wrap to media's intrinsic resolution (for non-16:9 assets)
+        const observer = new MutationObserver(() => {
+          const wrap = mediaEl.querySelector('.fitbox');
+          if (!wrap) return;
+          const vid = wrap.querySelector('video');
+          const img = wrap.querySelector('img');
+          function setAR(w,h){ if(w>0 && h>0){ wrap.style.setProperty('--ar', `${w} / ${h}`); wrap.style.aspectRatio = `${w} / ${h}`; } }
+          if (vid){
+            if (vid.readyState >= 1) setAR(vid.videoWidth, vid.videoHeight);
+            vid.addEventListener('loadedmetadata', () => setAR(vid.videoWidth, vid.videoHeight), { once:true });
+          }
+          if (img){
+            if (img.naturalWidth) setAR(img.naturalWidth, img.naturalHeight);
+            else img.addEventListener('load', () => setAR(img.naturalWidth, img.naturalHeight), { once:true });
+          }
+          // Toggle stacked layout for very tall or very small media areas to reclaim space
+          const ar = wrap.style.paddingTop ? parseFloat(wrap.style.paddingTop) / 100 : (9/16);
+          const body = document.querySelector('.modal-body');
+          // keep side-by-side; no stacked switch here
+        });
+        observer.observe(mediaEl, { childList: true, subtree: true });
+
+        function openModal(data, clickEl){
           tEl.textContent = data.title || '';
           yEl.textContent = data.year ? String(data.year) : '';
           sEl.textContent = data.summary || '';
@@ -141,11 +192,35 @@ const projects = items.sort((a,b) => a.data.order - b.data.order);
           const slug = (data.title||'').toLowerCase().replace(/[^a-z0-9]+/g,'-');
           openEl.style.display='inline-flex';
           openEl.onclick = ()=>{ window.location.href = `/projects/${slug}/`; };
+          // set transform origin for zoom animation based on clicked card
+          if (clickEl){
+            const r = clickEl.getBoundingClientRect();
+            const cx = r.left + r.width/2; const cy = r.top + r.height/2;
+            overlay.style.setProperty('--ox', cx+'px');
+            overlay.style.setProperty('--oy', cy+'px');
+          } else {
+            overlay.style.removeProperty('--ox'); overlay.style.removeProperty('--oy');
+          }
           overlay.classList.add('show'); overlay.setAttribute('aria-hidden','false');
           document.body.style.overflow='hidden';
         }
 
-        function closeModal(){ overlay.classList.remove('show'); overlay.setAttribute('aria-hidden','true'); document.body.style.overflow=''; }
+        function closeModal(){
+          // Stop any playing media (HTML5 video or YouTube iframe)
+          try{
+            const wrap = mediaEl.querySelector('.fitbox');
+            if (wrap){
+              const vid = wrap.querySelector('video');
+              if (vid){ vid.pause(); vid.currentTime = 0; }
+              const yt = wrap.querySelector('iframe[data-yt="1"]');
+              if (yt && yt.contentWindow){ yt.contentWindow.postMessage(JSON.stringify({event:'command', func:'stopVideo', args:''}), '*'); }
+            }
+          }catch(e){ /* ignore */ }
+
+          overlay.classList.remove('show');
+          overlay.setAttribute('aria-hidden','true');
+          document.body.style.overflow='';
+        }
         closeEl.addEventListener('click', closeModal);
         overlay.addEventListener('click', (e)=>{ if(e.target===overlay) closeModal(); });
         window.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeModal(); });
@@ -161,8 +236,8 @@ const projects = items.sort((a,b) => a.data.order - b.data.order);
             repo: card.dataset.repo,
             stack: card.dataset.stack
           };
-          card.addEventListener('click', ()=> openModal(data));
-          card.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' ') { e.preventDefault(); openModal(data);} });
+          card.addEventListener('click', ()=> openModal(data, card));
+          card.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' ') { e.preventDefault(); openModal(data, card);} });
         });
       </script>
     </main>
