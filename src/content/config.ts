@@ -9,6 +9,9 @@ const projects = defineCollection({
     stack: z.array(z.string()).optional(),
     summary: z.string(),
     thumb: z.string().optional(),
+    // Optional rich fields for the Projects modal
+    video: z.string().optional(), // YouTube URL, mp4, or webm
+    responsibilities: z.array(z.string()).optional(),
     repo: z.string().url().optional(),
     live: z.string().optional(),
     order: z.number().default(0)
