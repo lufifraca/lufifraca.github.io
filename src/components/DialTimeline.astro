@@ -1,0 +1,276 @@
+---
+const { items = [] } = Astro.props;
+const total = items.length || 1;
+---
+<section id="about" class="dial-timeline" aria-label="Experience timeline" data-dial-root>
+  <div class="dial-heading">
+    <p class="kicker"></p>
+    <h2>About me</h2>
+    <p>
+      I study computer science at Cal Poly Pomona with an emphasis on game
+      development. My work spans narrative tools, game design documentation, AI
+      behaviors, and a strong proficiency in programming both in studio internships and
+      student-led teams. I've proven my experience through internships with
+      505 Games in Milan, and by shipping playable prototypes across Unity and
+      Unreal.
+    </p>
+  </div>
+  <div class="dial-stage">
+    <div class="dial-axis"></div>
+    <aside class="dial-side">
+      <div class="dial-side__prompt">Drag to browse</div>
+      <div class="dial-side__control">
+        <div class="dial-side__dates">
+          {items.map((item, index) => (
+            <button type="button" class="dial-side__date" data-index={index}>
+              {item.date}
+            </button>
+          ))}
+        </div>
+      </div>
+    </aside>
+    <div class="dial-wheel" data-total={items.length} style="--radius: clamp(240px, 38vw, 360px); --offset: 0deg;">
+      {items.map((item, index) => (
+        <article
+          class="dial-card"
+          style={`--rotate:${(360 / total) * index}deg`}
+          data-label={item.date}
+          data-index={index}
+        >
+          {item.thumb ? (
+            <img class="dial-thumb" src={item.thumb} alt={item.title} loading="lazy" />
+          ) : (
+            <div class="dial-thumb placeholder"></div>
+          )}
+          <div class="dial-copy">
+            <div class="kicker">{item.date}</div>
+            <h3>{item.title}</h3>
+            <p class="timeline-blurb" set:html={item.blurb}></p>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script>
+  (() => {
+    const prefersReduce =
+      window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    function initDial(section) {
+      const wheel = section.querySelector(".dial-wheel");
+      const dateButtons = Array.from(section.querySelectorAll(".dial-side__date"));
+      if (!wheel) return;
+
+      const cards = Array.from(section.querySelectorAll(".dial-card"));
+      const total = cards.length;
+      if (!total) return;
+      const maxProgress = Math.max(0, total - 1);
+      const step = 360 / total;
+      let progress = 0;
+
+      const clamp = (value) => Math.min(maxProgress, Math.max(0, value));
+
+      const setActive = (activeIndex) => {
+        cards.forEach((card, idx) => card.classList.toggle("is-active", idx === activeIndex));
+        dateButtons.forEach((btn, idx) => btn.classList.toggle("is-active", idx === activeIndex));
+      };
+
+      const sync = () => {
+        const angle = -progress * step;
+        const activeIndex = Math.round(progress);
+        wheel.style.setProperty("--offset", `${angle}deg`);
+        setActive(activeIndex);
+      };
+
+      const setProgress = (value) => {
+        progress = clamp(value);
+        sync();
+      };
+
+      // Use event delegation on the dates container for robustness
+      const datesContainer = section.querySelector('.dial-side__dates');
+      if (datesContainer) {
+        datesContainer.addEventListener('click', (e) => {
+          const btn = e.target.closest('.dial-side__date');
+          if (!btn || !datesContainer.contains(btn)) return;
+          e.preventDefault();
+          // try dataset first, then fallback to index in the current list
+          let idx = Number(btn.dataset.index);
+          if (!Number.isFinite(idx)) {
+            const currentButtons = Array.from(datesContainer.querySelectorAll('.dial-side__date'));
+            idx = currentButtons.indexOf(btn);
+          }
+          if (!Number.isFinite(idx) || idx < 0) return;
+          idx = Math.min(Math.max(0, idx), maxProgress);
+          setProgress(idx);
+        });
+      }
+
+      if (prefersReduce) {
+        setActive(0);
+        return;
+      }
+
+      sync();
+    }
+
+    function initAll() {
+      document.querySelectorAll("[data-dial-root]").forEach((section) => initDial(section));
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initAll, { once: true });
+    } else {
+      initAll();
+    }
+  })();
+</script>
+
+<style>
+  .dial-timeline {
+    padding: 32px 0 96px;
+    position: relative;
+  }
+  .dial-heading {
+    max-width: 620px;
+    margin-bottom: 32px;
+  }
+  .dial-heading h2 {
+    margin-bottom: 8px;
+    font-size: clamp(2rem, 5vw, 3rem);
+  }
+  .dial-stage {
+    position: relative;
+    height: clamp(480px, 80vh, 720px);
+    perspective: 1400px;
+    overflow: visible;
+  }
+  .dial-axis {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(180deg, rgba(46, 92, 255, 0), rgba(46, 92, 255, 0.5), rgba(46, 92, 255, 0));
+    transform: translateX(-50%);
+    z-index: 0;
+    pointer-events: none;
+  }
+  .dial-wheel {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+    z-index: 0;
+    --offset: 0deg;
+    --radius: clamp(220px, 35vw, 340px);
+    transform: translateZ(-60px) rotateX(var(--offset));
+    transition: transform 0.4s ease;
+    transform-origin: center;
+  }
+  .dial-card {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: min(520px, 90vw);
+    border-radius: 24px;
+    padding: 18px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 18px;
+    transform-style: preserve-3d;
+    transform-origin: center;
+    transform: translate(-50%, -50%) rotateX(var(--rotate)) translateZ(var(--radius));
+    box-shadow: var(--shadow);
+    opacity: 0.3;
+    filter: blur(1.2px);
+    transition: transform 0.4s ease, opacity 0.4s ease, filter 0.4s ease;
+    backface-visibility: hidden;
+    pointer-events: none;
+  }
+  .dial-card.is-active {
+    opacity: 1;
+    filter: none;
+    transform: translate(-50%, -50%) rotateX(var(--rotate)) translateZ(calc(var(--radius) + 40px));
+    pointer-events: auto;
+  }
+  .dial-thumb {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    background: #d8defd;
+  }
+  .dial-thumb.placeholder {
+    background: rgba(46, 92, 255, 0.08);
+  }
+  .dial-copy h3 {
+    margin: 6px 0;
+    font-size: 1.3rem;
+  }
+  .dial-copy .timeline-blurb {
+    margin-bottom: 0;
+  }
+  @media (max-width: 720px) {
+    .dial-card {
+      grid-template-columns: 1fr;
+      text-align: left;
+    }
+    .dial-thumb {
+      height: 200px;
+    }
+  }
+
+  .dial-side {
+    position: absolute;
+    top: 50%;
+    right: clamp(-10px, -2vw, 16px);
+    transform: translateY(-50%);
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.94);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 18px 20px;
+    box-shadow: var(--shadow);
+  }
+  .dial-side__prompt {
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: center;
+  }
+  .dial-side__control {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    height: clamp(280px, 55vh, 420px);
+  }
+  .dial-side__dates {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+  }
+  .dial-side__date {
+    background: transparent;
+    border: none;
+    padding: 4px 10px;
+    text-align: left;
+    color: var(--muted);
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+  .dial-side__date.is-active {
+    color: var(--accent);
+    font-weight: 600;
+  }
+</style>

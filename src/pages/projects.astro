@@ -3,243 +3,229 @@ import Header from "../components/Header.astro";
 import DynamicIsland from "../components/DynamicIsland.astro";
 import { getCollection } from "astro:content";
 
-const items = await getCollection("projects").catch(() => []);
-const projects = items.sort((a,b) => a.data.order - b.data.order);
+const projects = (await getCollection("projects", ({ data }) => !data.draft).catch(() => []))
+  .sort((a, b) => a.data.order - b.data.order);
 ---
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <title>Projects · Luca Ficano Latimer</title>
     <meta name="description" content="Game dev and CS projects" />
-    <link rel="stylesheet" href="/site.css">
+    <link rel="stylesheet" href="/site.css" />
     <style>
-      .projects-grid{ display:grid; grid-template-columns: repeat(auto-fill, minmax(220px,1fr)); gap:16px; }
-      .p-card{
-        position: relative; overflow:hidden; border-radius:14px; border:1px solid var(--border);
-        background: linear-gradient(180deg, rgba(15,22,36,.7), rgba(12,18,30,.9));
-        box-shadow: 0 10px 30px rgba(0,0,0,.35);
-        transform: translateZ(0); cursor:pointer; transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+      .projects-page {
+        padding-top: 32px;
       }
-      .p-card:hover{ transform: translateY(-3px); box-shadow: 0 16px 40px rgba(0,0,0,.45); border-color: rgba(96,165,250,.35); }
-      .p-thumb{ width:100%; height:140px; object-fit:cover; display:block; }
-      .p-body{ padding:12px; }
-      .p-title{ font-weight:700; font-size:16px; margin:0 0 4px; }
-      .p-meta{ color:rgba(200,220,255,.7); font-size:12px; margin-bottom:6px }
-      .p-summary{ margin:0; font-size:13px; opacity:.9 }
-
-      .overlay{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; background: rgba(7,10,18,.4); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); z-index:80; opacity:0; transition: opacity .22s ease; }
-      .overlay.show{ display:flex; opacity:1 }
-      /* Perf mode: tone down heavy effects while playing video */
-      .overlay.perf{ background: rgba(7,10,18,.8); backdrop-filter: none; -webkit-backdrop-filter: none; }
-      .overlay.perf .modal{ box-shadow: 0 10px 30px rgba(0,0,0,.5); }
-      .modal{ width:min(1160px, 96vw); max-height:92vh; display:flex; flex-direction:column; border-radius:16px; border:1px solid rgba(96,165,250,.25); background: linear-gradient( to bottom right, rgba(13,20,34,.98), rgba(9,14,24,.98)); box-shadow: 0 18px 60px rgba(0,0,0,.55); transform-origin: var(--ox, 50vw) var(--oy, 50vh); transform: translateY(8px) scale(.92); opacity:0; transition: transform .22s cubic-bezier(.18,.84,.3,1), opacity .22s ease; }
-      .overlay.show .modal{ transform: translateY(0) scale(1); opacity:1 }
-      .modal-header{ display:flex; align-items:center; justify-content:space-between; padding:14px 16px; border-bottom:1px solid rgba(255,255,255,.06) }
-      .modal-title{ font-size:18px; font-weight:700 }
-      .close-btn{ background:transparent; border:1px solid var(--border); color:var(--text); border-radius:8px; padding:6px 10px; cursor:pointer }
-      .close-btn:hover{ border-color: var(--accent) }
-      .modal-body{ display:grid; grid-template-columns: minmax(0,1.5fr) minmax(0,1fr); gap:18px; padding:14px 16px; max-height: calc(92vh - 60px); overflow:auto; align-items:start }
-      .media{ position:relative; border-radius:12px; overflow:hidden; background:#0a1120; border:1px solid rgba(255,255,255,.06); min-width:0; will-change: transform }
-      .info{ min-width:0 }
-      /* ratio wrapper to ensure correct fit for any media */
-      .fitbox{ position:relative; width:100%; height:auto; aspect-ratio: var(--ar, 16/9); background:#000 }
-      .fitbox > *{ position:absolute; inset:0; width:100%; height:100%; border:0; display:block; object-fit:contain; object-position:center center; will-change: transform; transform: translateZ(0); }
-      .media{ align-self: start }
-      /* extra safety to beat any inherited rules */
-      .media video, .media iframe, .media img{ object-fit:contain !important; object-position:center center; }
-      .info small{ color:rgba(200,220,255,.7) }
-      .chips{ display:flex; gap:6px; flex-wrap:wrap; margin:8px 0 }
-      .chip{ font-size:12px; border:1px solid var(--border); padding:4px 8px; border-radius:999px }
-      .actions{ display:flex; gap:10px; margin-top:12px; flex-wrap:wrap }
-      .actions a{ text-decoration:none }
-      @media (max-width: 980px){ .modal{ width:min(96vw, 900px); } .modal-body{ grid-template-columns: 1fr; } }
-      @media (prefers-reduced-motion: reduce){ .overlay, .modal{ transition: none !important; } }
+      .projects-heading {
+        max-width: 760px;
+        margin-bottom: 40px;
+      }
+      .projects-heading h1 {
+        font-size: clamp(2.5rem, 7vw, 4.5rem);
+        margin-bottom: 10px;
+        letter-spacing: -1px;
+      }
+      .project-feature {
+        margin-bottom: 110px;
+      }
+      .project-media {
+        position: relative;
+        border-radius: clamp(20px, 4vw, 34px);
+        overflow: hidden;
+        min-height: 420px;
+        border: 1px solid var(--border);
+        background: var(--bg-soft);
+        box-shadow: var(--shadow-soft);
+        margin-bottom: clamp(24px, 6vw, 72px);
+      }
+      .project-media-asset {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .project-overlay {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: clamp(24px, 6vw, 60px);
+        color: #fff;
+        background: linear-gradient(180deg, rgba(0, 6, 32, 0) 25%, rgba(3, 9, 24, 0.85) 100%);
+        text-transform: uppercase;
+      }
+      .project-count {
+        font-size: 0.85rem;
+        letter-spacing: 0.4em;
+        margin-bottom: 12px;
+        opacity: 0.8;
+      }
+      .project-overlay h2 {
+        font-size: clamp(2.4rem, 8vw, 5.2rem);
+        margin: 0;
+        letter-spacing: -1px;
+      }
+      .project-overlay p {
+        margin: 14px 0 0;
+        text-transform: none;
+        font-size: 1.1rem;
+        max-width: 60ch;
+        line-height: 1.6;
+        opacity: 0.92;
+      }
+      .project-card {
+        margin-top: clamp(-80px, -10vw, -20px);
+        margin-left: auto;
+        width: min(640px, 95%);
+        background: var(--card);
+        border-radius: 28px;
+        border: 1px solid var(--border);
+        padding: clamp(20px, 3vw, 36px);
+        box-shadow: var(--shadow-soft);
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        position: relative;
+        z-index: 2;
+      }
+      .project-card__header {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+      .project-tags {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .project-tags span {
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 4px 10px;
+        font-size: 0.78rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .project-card__summary {
+        margin: 0;
+        font-size: 1rem;
+      }
+      .project-card__meta {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+      }
+      .project-card__meta div {
+        flex: 1;
+        min-width: 140px;
+      }
+      .project-card__meta span {
+        display: block;
+        font-size: 0.78rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 4px;
+      }
+      .project-card__meta strong {
+        font-size: 1.1rem;
+      }
+      .project-card__actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+      @media (max-width: 720px) {
+        .project-card {
+          margin-top: 0;
+          width: 100%;
+        }
+        .project-media {
+          margin-bottom: 24px;
+        }
+        .project-overlay {
+          padding-bottom: 36px;
+        }
+      }
     </style>
   </head>
   <body>
     <Header />
     <DynamicIsland />
-    <main class="container">
-      <h1>Projects</h1>
-      <div class="projects-grid">
-        {projects.map(p => (
-          <div class="p-card" role="button" tabindex="0"
-            data-title={p.data.title}
-            data-year={p.data.year}
-            data-summary={p.data.summary}
-            data-thumb={p.data.thumb || ''}
-            data-video={p.data.video || ''}
-            data-live={p.data.live || ''}
-            data-repo={p.data.repo || ''}
-            data-stack={p.data.stack?.join(', ') || ''}
-            aria-label={`Open ${p.data.title}`}
-          >
-            {p.data.thumb ? <img class="p-thumb" src={p.data.thumb} alt={p.data.title} /> : <div class="p-thumb" style="display:grid;place-items:center;color:rgba(200,220,255,.7)">No image</div>}
-            <div class="p-body">
-              <div class="p-title">{p.data.title}</div>
-              <div class="p-meta">{p.data.year}{p.data.stack?.length ? ` · ${p.data.stack.join(', ')}` : ''}</div>
-              <p class="p-summary">{p.data.summary}</p>
+
+    <main class="container projects-page">
+      <div class="projects-heading">
+        <p class="kicker"></p>
+        <h1>My Projects</h1>
+        <p>
+          
+        </p>
+      </div>
+
+      {projects.map((project, index) => (
+        <article class="project-feature" id={project.data.slug}>
+          <div class="project-media">
+            {project.data.video ? (
+              <video
+                class="project-media-asset"
+                src={project.data.video}
+                poster={project.data.thumb || undefined}
+                autoplay
+                muted
+                loop
+                playsinline
+              ></video>
+            ) : project.data.thumb ? (
+              <img class="project-media-asset" src={project.data.thumb} alt={project.data.title} loading="lazy" />
+            ) : (
+              <div class="project-media-asset" style="background: #e5e7eb;"></div>
+            )}
+            <div class="project-overlay">
+              <div class="project-count">{String(index + 1).padStart(2, "0")} / {project.data.year}</div>
+              <h2>{project.data.title}</h2>
             </div>
           </div>
-        ))}
-      </div>
-      <div class="overlay" id="p-overlay" aria-hidden="true">
-        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="p-title">
-          <div class="modal-header">
-            <div id="p-title" class="modal-title"></div>
-            <button class="close-btn" id="p-close" aria-label="Close">Close</button>
-          </div>
-          <div class="modal-body">
-            <div class="media" id="p-media"></div>
-            <div class="info">
-              <div style="font-weight:700; font-size:16px" id="p-year"></div>
-              <div class="chips" id="p-stack"></div>
-              <p id="p-summary"></p>
-              <div id="p-resp"></div>
-              <div class="actions">
-                <a class="btn primary" id="p-live" target="_blank" rel="noreferrer" style="display:none">Play</a>
-                <a class="btn" id="p-repo" target="_blank" rel="noreferrer" style="display:none">Repository</a>
-                <a class="btn" id="p-open" style="display:none">Open Details</a>
+          <div class="project-card">
+            <div class="project-card__header">
+              <div>
+                <div class="kicker"></div>
+                <h3>{project.data.title}</h3>
+              </div>
+              {project.data.stack?.length ? (
+                <div class="project-tags">
+                  {project.data.stack.map((tech) => (
+                    <span>{tech}</span>
+                  ))}
+                </div>
+              ) : null}
+            </div>
+            <p class="project-card__summary">{project.data.summary}</p>
+            <div class="project-card__meta">
+              <div>
+                <span>Year</span>
+                <strong>{project.data.year}</strong>
+              </div>
+              <div>
+                <span>Focus</span>
+                <strong>{project.data.stack?.join(" / ") || "Design & Build"}</strong>
               </div>
             </div>
+            <div class="project-card__actions">
+              {project.data.live ? (
+                <a class="btn primary" href={project.data.live} target="_blank" rel="noreferrer">Play build</a>
+              ) : null}
+              {project.data.repo ? (
+                <a class="btn" href={project.data.repo} target="_blank" rel="noreferrer">Source</a>
+              ) : null}
+              
+            </div>
           </div>
-        </div>
-      </div>
-      <script>
-        const overlay = document.getElementById('p-overlay');
-        const mediaEl = document.getElementById('p-media');
-        const tEl = document.getElementById('p-title');
-        const yEl = document.getElementById('p-year');
-        const sEl = document.getElementById('p-summary');
-        const stEl = document.getElementById('p-stack');
-        const respEl = document.getElementById('p-resp');
-        const liveEl = document.getElementById('p-live');
-        const repoEl = document.getElementById('p-repo');
-        const openEl = document.getElementById('p-open');
-        const closeEl = document.getElementById('p-close');
-
-        function embedMedia({ video, thumb }){
-          mediaEl.innerHTML = '';
-          const wrap = document.createElement('div');
-          wrap.className = 'fitbox';
-          mediaEl.appendChild(wrap);
-          // Do not pre-set AR from thumb when there is a video; we will use the video metadata for exact aspect.
-          if (video) {
-            const isYouTube = /youtu\.be|youtube\.com/.test(video);
-            if (isYouTube){
-              const baseUrl = video.includes('embed') ? video : video.replace('watch?v=','embed/');
-              const sep = baseUrl.includes('?') ? '&' : '?';
-              const url = `${baseUrl}${sep}rel=0&modestbranding=1&playsinline=1&enablejsapi=1&mute=1`;
-              const iframe = document.createElement('iframe');
-              iframe.src = url;
-              iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
-              iframe.allowFullscreen = true;
-              iframe.setAttribute('title','Project video');
-              iframe.setAttribute('data-yt','1');
-              wrap.appendChild(iframe);
-              // Assume playback when interacting with iframe; enable perf mode
-              overlay.classList.add('perf');
-              return;
-            }
-            if (/\.mp4$|\.webm$/.test(video)){
-              const v = document.createElement('video');
-              v.controls = true; v.src = video;
-              v.style.objectFit = 'contain'; v.style.objectPosition = 'center';
-              v.style.width = '100%'; v.style.height = '100%';
-              v.muted = true; v.playsInline = true; v.preload = 'metadata';
-              if (thumb) v.poster = thumb;
-              v.addEventListener('play', ()=> overlay.classList.add('perf'));
-              v.addEventListener('pause', ()=> overlay.classList.remove('perf'));
-              v.addEventListener('ended', ()=> overlay.classList.remove('perf'));
-              wrap.appendChild(v); return;
-            }
-          }
-          if (thumb) { const img = document.createElement('img'); img.src = thumb; img.alt=''; img.style.objectFit='contain'; img.style.objectPosition='center'; wrap.appendChild(img); }
-        }
-
-        // Dynamically fit the wrap to media's intrinsic resolution (for non-16:9 assets)
-        const observer = new MutationObserver(() => {
-          const wrap = mediaEl.querySelector('.fitbox');
-          if (!wrap) return;
-          const vid = wrap.querySelector('video');
-          const img = wrap.querySelector('img');
-          function setAR(w,h){ if(w>0 && h>0){ wrap.style.setProperty('--ar', `${w} / ${h}`); wrap.style.aspectRatio = `${w} / ${h}`; } }
-          if (vid){
-            if (vid.readyState >= 1) setAR(vid.videoWidth, vid.videoHeight);
-            vid.addEventListener('loadedmetadata', () => setAR(vid.videoWidth, vid.videoHeight), { once:true });
-          }
-          if (img){
-            if (img.naturalWidth) setAR(img.naturalWidth, img.naturalHeight);
-            else img.addEventListener('load', () => setAR(img.naturalWidth, img.naturalHeight), { once:true });
-          }
-          // Toggle stacked layout for very tall or very small media areas to reclaim space
-          const ar = wrap.style.paddingTop ? parseFloat(wrap.style.paddingTop) / 100 : (9/16);
-          const body = document.querySelector('.modal-body');
-          // keep side-by-side; no stacked switch here
-        });
-        observer.observe(mediaEl, { childList: true, subtree: true });
-
-        function openModal(data, clickEl){
-          tEl.textContent = data.title || '';
-          yEl.textContent = data.year ? String(data.year) : '';
-          sEl.textContent = data.summary || '';
-          stEl.innerHTML = '';
-          if (data.stack){ data.stack.split(',').forEach(x=>{ const c=document.createElement('span'); c.className='chip'; c.textContent=x.trim(); stEl.appendChild(c);}); }
-          respEl.innerHTML = '';
-          embedMedia(data);
-          if (data.live){ liveEl.style.display='inline-flex'; liveEl.href=data.live; } else { liveEl.style.display='none'; }
-          if (data.repo){ repoEl.style.display='inline-flex'; repoEl.href=data.repo; } else { repoEl.style.display='none'; }
-          const slug = (data.title||'').toLowerCase().replace(/[^a-z0-9]+/g,'-');
-          openEl.style.display='inline-flex';
-          openEl.onclick = ()=>{ window.location.href = `/projects/${slug}/`; };
-          // set transform origin for zoom animation based on clicked card
-          if (clickEl){
-            const r = clickEl.getBoundingClientRect();
-            const cx = r.left + r.width/2; const cy = r.top + r.height/2;
-            overlay.style.setProperty('--ox', cx+'px');
-            overlay.style.setProperty('--oy', cy+'px');
-          } else {
-            overlay.style.removeProperty('--ox'); overlay.style.removeProperty('--oy');
-          }
-          overlay.classList.add('show'); overlay.setAttribute('aria-hidden','false');
-          document.body.style.overflow='hidden';
-        }
-
-        function closeModal(){
-          // Stop any playing media (HTML5 video or YouTube iframe)
-          try{
-            const wrap = mediaEl.querySelector('.fitbox');
-            if (wrap){
-              const vid = wrap.querySelector('video');
-              if (vid){ vid.pause(); vid.currentTime = 0; }
-              const yt = wrap.querySelector('iframe[data-yt="1"]');
-              if (yt && yt.contentWindow){ yt.contentWindow.postMessage(JSON.stringify({event:'command', func:'stopVideo', args:''}), '*'); }
-            }
-          }catch(e){ /* ignore */ }
-
-          overlay.classList.remove('show');
-          overlay.setAttribute('aria-hidden','true');
-          document.body.style.overflow='';
-        }
-        closeEl.addEventListener('click', closeModal);
-        overlay.addEventListener('click', (e)=>{ if(e.target===overlay) closeModal(); });
-        window.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeModal(); });
-
-        document.querySelectorAll('.p-card').forEach(card=>{
-          const data = {
-            title: card.dataset.title,
-            year: card.dataset.year,
-            summary: card.dataset.summary,
-            thumb: card.dataset.thumb,
-            video: card.dataset.video,
-            live: card.dataset.live,
-            repo: card.dataset.repo,
-            stack: card.dataset.stack
-          };
-          card.addEventListener('click', ()=> openModal(data, card));
-          card.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' ') { e.preventDefault(); openModal(data, card);} });
-        });
-      </script>
+        </article>
+      ))}
     </main>
   </body>
- </html>
+</html>

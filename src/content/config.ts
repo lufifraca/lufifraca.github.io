@@ -14,7 +14,8 @@ const projects = defineCollection({
     responsibilities: z.array(z.string()).optional(),
     repo: z.string().url().optional(),
     live: z.string().optional(),
-    order: z.number().default(0)
+    order: z.number().default(0),
+    draft: z.boolean().default(false)
   })
 });
 

@@ -1,10 +1,11 @@
 ---
-const label = "Explore →";
+const label = "Explore +";
 ---
-<div id="island" aria-hidden="true">{label}</div>
+<div id="island" aria-hidden="true" data-label={label}>{label}</div>
 
 <script>
   const el = document.getElementById("island");
+  const defaultLabel = el?.dataset?.label || "Explore +";
   let x = innerWidth/2, y = innerHeight/2, tx = x, ty = y;
   let raf;
 
@@ -22,7 +23,10 @@ const label = "Explore →";
 
   document.addEventListener("mouseover", (e) => {
     const a = e.target.closest("a");
-    if (a && a.href) el.textContent = a.getAttribute("aria-label") || "Open";
-    else el.textContent = "Explore →";
+    if (a && a.href) {
+      el.textContent = a.getAttribute("aria-label") || "Open";
+    } else {
+      el.textContent = defaultLabel;
+    }
   });
 </script>

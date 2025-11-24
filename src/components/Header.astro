@@ -1,13 +1,11 @@
 ---
-const resumeUrl = "/cv.pdf"; // put your PDF at public/cv.pdf
+const resumeUrl = "/cv.pdf";
 ---
-<link rel="stylesheet" href="/site.css">
+<link rel="stylesheet" href="/site.css" />
 
-<!-- Sticky transparent bar that holds a centered “notch” -->
 <header class="notch-bar" aria-label="Site navigation">
-  <!-- The notch itself -->
   <div class="notch">
-    <nav class="notch-nav" aria-label="Primary">
+    <nav class="notch-nav" aria-label="Primary navigation">
       <a class="chip" href="/" aria-label="Home">Home</a>
       <a class="chip" href="/projects" aria-label="Projects">Projects</a>
       <a class="chip primary" href={resumeUrl} target="_blank" rel="noreferrer" aria-label="Resume">Resume</a>
@@ -16,89 +14,131 @@ const resumeUrl = "/cv.pdf"; // put your PDF at public/cv.pdf
 </header>
 
 <style>
-/* notch container */
-.notch-bar{
-  position: sticky; top: 0; z-index: 60;
-  height: 72px;
-  display: grid; place-items: center;
-  /* make the bar opaque */
-  background: var(--bg);
-  border-bottom: none;
-}
+  .notch-bar {
+    position: sticky;
+    top: 0;
+    z-index: 60;
+    height: 78px;
+    display: grid;
+    place-items: center;
+    background: rgba(246, 244, 238, 0.92);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(20px);
+  }
 
-/* overlay that darkens the bar but leaves the notch area transparent */
-.notch-bar::before{
-  content: "";
-  position: absolute; inset: 0; z-index: 2;
-  /* fully opaque overlay color */
-  background: rgba(11,16,32,1);
-  display: block;
-  pointer-events: none;
-  /* default notch hole size (tweak as needed or set in a parent/root) */
-  --notch-w: 220px; /* width of the transparent notch area */
-  --notch-h: 56px;  /* height of the transparent notch area */
-  /* center the hole horizontally and vertically within the bar */
-  --notch-x: 50%;
-  --notch-y: 50%;
-  /* create an elliptical hole using mask and radial-gradient */
-  -webkit-mask: radial-gradient(ellipse var(--notch-w) var(--notch-h) at var(--notch-x) var(--notch-y), transparent 0, transparent 50%, black 50.1%);
-  mask: radial-gradient(ellipse var(--notch-w) var(--notch-h) at var(--notch-x) var(--notch-y), transparent 0, transparent 50%, black 50.1%);
-}
+  .notch-bar::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background: rgba(255, 255, 255, 0.9);
+    pointer-events: none;
+    --notch-w: 240px;
+    --notch-h: 60px;
+    --notch-x: 50%;
+    --notch-y: 50%;
+    -webkit-mask: radial-gradient(
+      ellipse var(--notch-w) var(--notch-h) at var(--notch-x) var(--notch-y),
+      transparent 0,
+      transparent 50%,
+      black 50.1%
+    );
+    mask: radial-gradient(
+      ellipse var(--notch-w) var(--notch-h) at var(--notch-x) var(--notch-y),
+      transparent 0,
+      transparent 50%,
+      black 50.1%
+    );
+  }
 
-/* the notch shape */
-.notch{
-  position: relative; z-index: 3; /* sit above the bar overlay */
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px 14px;
-  border-radius: 999px;
-  /* make the notch itself transparent so the overlay shows a hole */
-  background: transparent;
-  border: 1px solid rgba(255,255,255,0.06); /* subtle outline if desired */
-  box-shadow:
-    0 12px 28px rgba(0,0,0,.45);
-}
+  .notch {
+    position: relative;
+    z-index: 3;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 18px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    box-shadow: 0 24px 50px rgba(15, 23, 42, 0.14);
+  }
 
-/* subtle “ears” to mimic the iPhone dynamic island silhouette */
-.notch::before,
-.notch::after{
-  content: "";
-  position:absolute; top: 10px; width: 18px; height: 18px;
-  background: transparent; /* keep "ears" transparent so notch hole is continuous */
-  border: 1px solid rgba(255,255,255,0.06);
-  border-radius: 999px;
-  filter: blur(.2px);
-}
-.notch::before{ left: -10px }
-.notch::after { right: -10px }
+  .notch::before,
+  .notch::after {
+    content: "";
+    position: absolute;
+    top: 12px;
+    width: 18px;
+    height: 18px;
+    border-radius: 999px;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    background: rgba(255, 255, 255, 0.8);
+    filter: blur(0.2px);
+  }
 
-/* nav inside the notch */
-.notch-nav{ display:flex; gap:10px }
+  .notch::before {
+    left: -10px;
+  }
 
-/* pills for links */
-.chip{
-  display:inline-block;
-  padding:8px 12px;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  color: var(--text);
-  text-decoration: none;
-  transition: border-color .18s ease, transform .12s ease, background .18s ease, color .18s ease;
-}
-.chip:hover{ border-color: var(--accent); transform: translateY(-1px) }
-.chip.primary{
-  background: var(--accent);
-  color: #0b1220;
-  border-color: rgba(96,165,250,.6);
-}
-.chip.primary:hover{ background: var(--accent-2) }
+  .notch::after {
+    right: -10px;
+  }
 
-/* compact on small screens */
-@media (max-width: 520px){
-  .notch{ padding:6px 10px }
-  .chip{ padding:6px 10px; font-size: 14px }
-  .notch::before, .notch::after{ display:none }
-}
+  .notch-nav {
+    display: flex;
+    gap: 12px;
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: 1px solid var(--border-strong, rgba(15, 23, 42, 0.2));
+    background: rgba(255, 255, 255, 0.92);
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: transform 0.15s ease, border-color 0.18s ease, color 0.18s ease, background 0.18s ease;
+  }
+
+  .chip:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateY(-1px);
+  }
+
+  .chip.primary {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+    box-shadow: 0 14px 34px rgba(46, 92, 255, 0.3);
+  }
+
+  .chip.primary:hover {
+    background: var(--accent-2);
+    color: #fff;
+  }
+
+  @media (max-width: 520px) {
+    .notch {
+      padding: 8px 12px;
+    }
+
+    .chip {
+      padding: 8px 12px;
+      font-size: 0.75rem;
+      letter-spacing: 0.06em;
+    }
+
+    .notch::before,
+    .notch::after {
+      display: none;
+    }
+  }
 </style>
-

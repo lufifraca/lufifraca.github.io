@@ -4,8 +4,8 @@ import DynamicIsland from "../../components/DynamicIsland.astro";
 import { getCollection } from "astro:content";
 
 export async function getStaticPaths() {
-  const projects = await getCollection("projects");
-  return projects.map(p => ({ params: { slug: p.data.slug }, props: { project: p } }));
+  const projects = await getCollection("projects", ({ data }) => !data.draft);
+  return projects.map((p) => ({ params: { slug: p.data.slug }, props: { project: p } }));
 }
 const { project } = Astro.props;
 ---

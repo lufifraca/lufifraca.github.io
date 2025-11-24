@@ -1,45 +1,128 @@
 ---
 import Header from "../components/Header.astro";
 import DynamicIsland from "../components/DynamicIsland.astro";
-import CircularTimeline from "../components/CircularTimeline.astro";
+import DialTimeline from "../components/DialTimeline.astro";
 
-// UPDATED TIMELINE CONTENT
 const timeline = [
-  { date: "Summer 2025", title: "Game Design Intern — 505 Games (Avantgarden), Milan", blurb: " Implemented dialogue and quest transitions with the Narrative plugin for an early access MVP. Added world-map splines enabling fluid bridge building around the island. Worked fully in Italian and relocated for the internship for the second year in a row.", thumb:"/images/505-summer-2025.jpg" },
-  { date: "May 2025",   title: "Volunteer — GamesBeat Summit, Los Angeles", blurb: "Supported registration, attendee assistance, and speaker coordination. Engaged with developers, publishers, and investors to expand industry knowledge and network.", thumb:"/images/gamesbeat-summit.jpg" },
-  { date: "Mar 2025",   title: "Volunteer — GamesBeat Crossfire Lounge, San Francisco", blurb: "Managed check-in and networking sessions at an intimate, high-profile event. Built connections with professionals between panels and during post-session networking.", thumb:"/images/crossfire-lounge.jpg" },
-  { date: "Summer 2024",title: "Game Design Intern — 505 Games (Avantgarden Games), Milan", blurb: "Prototyped and documented features for an upcoming launch, improving team design workflow.  Built modular pieces and designed dungeon maps in UE5 for cave environments. Tested <em>Brothers: A Tale of Two Sons Remake</em>, and helped stabilize development.", thumb:"/images/among-the-trolls.jpg" },
-  { date: "Sep 2023 - Dec 2023",       title: "Unity 3D — Gunslinger Hilda", blurb: "Built enemy AI behavior; collaborated on shooting mechanics and bullet power-ups, Integrated AI with combat systems in a team setting.", thumb:"/images/gunslinger-hilda.jpg" },
-  { date: "Feb 2023 - May 2023",       title: "Unity 2.5D — Neon Navigator", blurb: "Designed level flow and event sequencing for encounters and resource pacing, Implemented a cursor-aimed laser shooter with energy consumption.", thumb:"/images/neon-navigator.jpg" },
-  { date: "2022–2025",  title: "B.S. Computer Science — Cal Poly Pomona", blurb: "Relevant Courses: Data structures, Design and Analysis of Algorithms, Systems Programming, OOP, Game Dev, C and C++.", thumb:"/images/cal-poly-pomona.jpg" }
+  {
+    date: "Summer 2025",
+    title: "Game Design Intern @ 505 Games (Avantgarden, Milan)",
+    blurb:
+      "Implemented dialogue and quest transitions with the Narrative plugin for an early access MVP. Added world-map splines enabling fluid bridge building around the island. Worked fully in Italian and relocated for the internship for the second year in a row.",
+    thumb: "/images/505-summer-2025.jpg",
+  },
+  {
+    date: "May 2025",
+    title: "Volunteer @ GamesBeat Summit, Los Angeles",
+    blurb:
+      "Supported registration, attendee assistance, and speaker coordination. Engaged with developers, publishers, and investors to expand industry knowledge and network.",
+    thumb: "/images/gamesbeat-summit.jpg",
+  },
+  {
+    date: "Mar 2025",
+    title: "Volunteer @ GamesBeat Crossfire Lounge, San Francisco",
+    blurb:
+      "Managed check-in and networking sessions at an intimate, high-profile event. Built connections with professionals between panels and during post-session networking.",
+    thumb: "/images/crossfire-lounge.jpg",
+  },
+  {
+    date: "Summer 2024",
+    title: "Game Design Intern @ 505 Games (Avantgarden Games, Milan)",
+    blurb:
+      "Prototyped and documented features for an upcoming launch, improving team design workflow. Built modular pieces and designed dungeon maps in UE5 for cave environments. Tested <em>Brothers: A Tale of Two Sons Remake</em> and helped stabilize development.",
+    thumb: "/images/among-the-trolls.jpg",
+  },
+  {
+    date: "Sep 2023 - Dec 2023",
+    title: "Unity 3D - Gunslinger Hilda",
+    blurb:
+      "Built enemy AI behavior, collaborated on shooting mechanics, and integrated combat-ready power-ups for the team's twin-stick shooter.",
+    thumb: "/images/gunslinger-hilda.jpg",
+  },
+  {
+    date: "Feb 2023 - May 2023",
+    title: "Unity 2.5D - Neon Navigator",
+    blurb:
+      "Designed level flow and event sequencing for encounters and resource pacing, and implemented a cursor-aimed laser shooter with energy consumption.",
+    thumb: "/images/neon-navigator.jpg",
+  },
+  {
+    date: "2022-2025",
+    title: "B.S. Computer Science @ Cal Poly Pomona",
+    blurb:
+      "Relevant courses: Data Structures, Algorithms, Systems Programming, OOP, Game Development, C, and C++.",
+    thumb: "/images/cal-poly-pomona.jpg",
+  },
 ];
 ---
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <title>Luca Ficano Latimer</title>
-    <meta name="description" content="Game dev and CS portfolio. Hero + About + Timeline on one page." />
-    <link rel="stylesheet" href="/site.css">
-    <link rel="stylesheet" href="/circular-timeline.css">
+    <meta
+      name="description"
+      content="Game design-focused CS portfolio. Hero, about, and project timeline."
+    />
+    <link rel="stylesheet" href="/site.css" />
     <style>
-      .hero{
-        display:grid; grid-template-columns: 1.2fr .9fr; gap:28px; align-items:center;
+      :target {
+        scroll-margin-top: 96px;
       }
-      .hero h1{ font-size: 48px; line-height: 1.1; margin: 10px 0 12px }
-      .hero p{ font-size: 18px }
-      .hero-img-wrap{
-        justify-self:end; width:min(460px,40vw); aspect-ratio:4/5;
-        border-radius:16px; overflow:hidden; border:1px solid var(--border);
-        box-shadow: var(--shadow); background:#0c121a;
+      section {
+        padding: 42px 0;
       }
-      .hero-img{ width:100%; height:100%; object-fit: cover }
-      :target{ scroll-margin-top: 84px }
-      section{ padding: 32px 0 }
-      .about p{ max-width: 70ch }
-      details{ border:1px solid var(--border); border-radius:12px; padding:10px 12px; background: var(--bg-soft) }
-      @media (max-width: 900px){
-        .hero{ grid-template-columns: 1fr }
-        .hero-img-wrap{ justify-self:start; width:min(520px,90vw) }
+      .hero {
+        display: grid;
+        grid-template-columns: 1.15fr 0.85fr;
+        gap: 38px;
+        align-items: center;
+        padding-top: 32px;
+      }
+      .hero h1 {
+        font-size: clamp(2.8rem, 7vw, 5rem);
+        line-height: 1;
+        letter-spacing: -1px;
+        margin: 12px 0 16px;
+      }
+      .hero p {
+        font-size: 1.1rem;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+      .hero-img-wrap {
+        justify-self: end;
+        width: min(480px, 40vw);
+        aspect-ratio: 4 / 5;
+        border-radius: 28px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow-soft);
+        background: var(--card);
+      }
+      .hero-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .about p {
+        max-width: 70ch;
+        font-size: 1.05rem;
+        line-height: 1.7;
+      }
+      .about-cta {
+        margin-top: 24px;
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      @media (max-width: 900px) {
+        .hero {
+          grid-template-columns: 1fr;
+        }
+        .hero-img-wrap {
+          justify-self: start;
+          width: min(540px, 100%);
+        }
       }
     </style>
   </head>
@@ -48,13 +131,12 @@ const timeline = [
     <DynamicIsland />
 
     <main class="container">
-
       <!-- HERO -->
       <section class="hero">
         <div>
-          <h1>Hi, I’m Luca.</h1>
+          <h1>Hi, I'm Luca.</h1>
           <p>
-            Welcome to my website. Scroll down to learn about me and my experiences, or click "Projects" to see what I've made!
+            Welcome to my website. Scroll to learn about me, and about the projects and opportunities I've engaged in.
           </p>
           <div style="margin-top:16px; display:flex; gap:12px; flex-wrap:wrap;">
             <a class="btn primary" href="#about" aria-label="About me">About me</a>
@@ -62,26 +144,37 @@ const timeline = [
           </div>
         </div>
         <div class="hero-img-wrap">
-          <img class="hero-img" src="/images/luca-hero.jpg" alt="Photo of Luca Ficano Latimer">
+          <img
+            class="hero-img"
+            src="/images/luca-hero.jpg"
+            alt="Photo of Luca Ficano Latimer"
+          />
         </div>
       </section>
 
-      <!-- ABOUT (on the same page) -->
-      <section id="about" class="about">
-        <h2>About me</h2>
-        <p>
-          I study computer science at Cal Poly Pomona, with an interest and specialization in Game Development.
-		  I have experience with Unity and Unreal Engine, and other relevant Game Dev tools and languages.
-		  I've proven my experience in my game projects, and my relevant internships for 505 Games in Milan, Italy.
-        </p>
-        
-      </section>
+      <!-- ABOUT moved into the timeline component -->
 
-      <!-- TIMELINE -->
-      <section>
-        <CircularTimeline items={timeline} />
+      <!-- TIMELINE EXPERIENCE -->
+      <section id="timeline">
+        <DialTimeline items={timeline} />
+        {/*
+          Legacy list view preserved for quick revert:
+          <div class="timeline-list">
+            {timeline.map((item) => (
+              <article class="timeline-card">
+                {item.thumb ? (
+                  <img class="timeline-thumb" src={item.thumb} alt={item.title} loading="lazy" />
+                ) : null}
+                <div class="timeline-card__body">
+                  <div class="kicker">{item.date}</div>
+                  <h3>{item.title}</h3>
+                  <p class="timeline-blurb" set:html={item.blurb}></p>
+                </div>
+              </article>
+            ))}
+          </div>
+        */}
       </section>
-
     </main>
   </body>
 </html>
