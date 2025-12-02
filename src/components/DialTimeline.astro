@@ -14,6 +14,7 @@ const total = items.length || 1;
       505 Games in Milan, and by shipping playable prototypes across Unity and
       Unreal.
     </p>
+    <span id="timeline-target" class="dial-anchor" aria-hidden="true"></span>
   </div>
   <div class="dial-stage">
     <div class="dial-axis"></div>
@@ -133,6 +134,13 @@ const total = items.length || 1;
     padding: 32px 0 96px;
     position: relative;
   }
+  .dial-anchor {
+    display: block;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    scroll-margin-top: clamp(96px, 12vh, 160px);
+  }
   .dial-heading {
     max-width: 620px;
     margin-bottom: 32px;
@@ -146,6 +154,7 @@ const total = items.length || 1;
     height: clamp(480px, 80vh, 720px);
     perspective: 1400px;
     overflow: visible;
+    margin-top: clamp(120px, 12vw, 200px);
   }
   .dial-axis {
     position: absolute;
@@ -165,7 +174,8 @@ const total = items.length || 1;
     z-index: 0;
     --offset: 0deg;
     --radius: clamp(220px, 35vw, 340px);
-    transform: translateZ(-60px) rotateX(var(--offset));
+    --wheel-offset-y: clamp(90px, 12vw, 160px);
+    transform: translateY(var(--wheel-offset-y)) translateZ(-60px) rotateX(var(--offset));
     transition: transform 0.4s ease;
     transform-origin: center;
   }
@@ -177,7 +187,9 @@ const total = items.length || 1;
     border-radius: 24px;
     padding: 18px;
     border: 1px solid var(--border);
-    background: var(--card);
+    background: var(--card, #fff);
+    isolation: isolate;
+    overflow: hidden;
     display: grid;
     grid-template-columns: 160px 1fr;
     gap: 18px;
