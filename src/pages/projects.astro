@@ -216,7 +216,7 @@ const projects = (await getCollection("projects", ({ data }) => !data.draft).cat
             </div>
             <div class="project-card__actions">
               {project.data.live ? (
-                <a class="btn primary" href={project.data.live} target="_blank" rel="noreferrer">Play build</a>
+                <a class="btn primary" href={project.data.live} target="_blank" rel="noreferrer">Visit</a>
               ) : null}
               {project.data.repo ? (
                 <a class="btn" href={project.data.repo} target="_blank" rel="noreferrer">Source</a>

@@ -1,0 +1,53 @@
+---
+title: "Tactix"
+slug: "tactix"
+year: 2026
+stack: ["Next.js", "React", "TypeScript", "Fastify", "Prisma", "PostgreSQL", "Redis", "Tailwind CSS"]
+summary: "Cross-game analytics and coaching platform for competitive gamers with real-time stats, session intelligence, and gamified progression."
+thumb: "/images/tactix.jpg"
+video: "/videos/tactix-demo.mp4"
+live: "https://tactixstats.com"
+order: 0
+---
+
+## Overview
+Tactix is a full-stack analytics platform designed to help competitive gamers track performance, identify patterns, and improve through data-driven insights. The platform aggregates stats across multiple popular competitive games and provides actionable intelligence.
+
+## Supported Games
+- **CS2** (Counter-Strike 2) via Steam API
+- **Valorant** via Riot/Henrik API
+- **Marvel Rivals** via Tracker Network
+- **Clash Royale & Brawl Stars** via Supercell API
+
+## Key Features
+- **Real-time Dashboard**: Win rate, K/D/A, time played, and session metrics
+- **Session Intelligence**: Optimal time-of-day analysis, tilt detection, session length impact
+- **Skill Domains**: Cross-game metrics (Mechanics, Aggression, Vitality, etc.)
+- **Character Breakdown**: Per-hero/agent performance statistics
+- **Rank Tracking**: Historical progression with sparkline visualizations
+- **Daily Quests**: Stat-based challenges with shareable badge rewards
+- **Streaks & Milestones**: Achievement tracking and gamified progression
+
+## What I Built
+- Full-stack monorepo architecture with pnpm workspaces and Turbo
+- Next.js 14 dashboard with Tailwind CSS and Framer Motion animations
+- Fastify API with Prisma ORM and PostgreSQL
+- BullMQ job queue with Redis for background stat ingestion
+- OAuth authentication (Google, Discord, Steam OpenID)
+- Stripe integration for subscription billing
+- Multi-game API integrations and data normalization
+- S3-compatible storage for match history payloads
+
+## Tech Architecture
+| Layer | Stack |
+|-------|-------|
+| Frontend | Next.js 14, React 18, Tailwind, Framer Motion |
+| Backend | Fastify, Prisma, PostgreSQL |
+| Queue/Cache | BullMQ, Redis (Upstash) |
+| Storage | S3-compatible (Tigris) |
+| Auth | Google, Discord, Steam OAuth |
+| Payments | Stripe Checkout |
+| Monitoring | Sentry |
+| Deploy | Vercel (web), Render (API), Neon (DB) |
+
+{/* Demo video placeholder - replace with actual recording */}

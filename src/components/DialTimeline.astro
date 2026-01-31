@@ -14,8 +14,7 @@ I like roles where design, systems, and communication intersect. I am comfortabl
     <span id="timeline-target" class="dial-anchor" aria-hidden="true"></span>
   </div>
   <div class="dial-stage">
-    <div class="dial-axis"></div>
-    <aside class="dial-side">
+        <aside class="dial-side">
       <div class="dial-side__prompt">Drag to browse</div>
       <div class="dial-side__control">
         <div class="dial-side__dates">
@@ -30,10 +29,11 @@ I like roles where design, systems, and communication intersect. I am comfortabl
     <div class="dial-wheel" data-total={items.length} style="--radius: clamp(240px, 38vw, 360px); --offset: 0deg;">
       {items.map((item, index) => (
         <article
-          class="dial-card"
+          class={`dial-card ${item.link ? 'has-link' : ''}`}
           style={`--rotate:${(360 / total) * index}deg`}
           data-label={item.date}
           data-index={index}
+          data-link={item.link || ''}
         >
           {item.thumb ? (
             <img class="dial-thumb" src={item.thumb} alt={item.title} loading="lazy" />
@@ -44,6 +44,7 @@ I like roles where design, systems, and communication intersect. I am comfortabl
             <div class="kicker">{item.date}</div>
             <h3>{item.title}</h3>
             <p class="timeline-blurb" set:html={item.blurb}></p>
+            {item.link && <span class="dial-link-hint">View project →</span>}
           </div>
         </article>
       ))}
@@ -58,8 +59,9 @@ I like roles where design, systems, and communication intersect. I am comfortabl
 
     function initDial(section) {
       const wheel = section.querySelector(".dial-wheel");
+      const stage = section.querySelector(".dial-stage");
       const dateButtons = Array.from(section.querySelectorAll(".dial-side__date"));
-      if (!wheel) return;
+      if (!wheel || !stage) return;
 
       const cards = Array.from(section.querySelectorAll(".dial-card"));
       const total = cards.length;
@@ -87,6 +89,91 @@ I like roles where design, systems, and communication intersect. I am comfortabl
         sync();
       };
 
+      // Drag/swipe support
+      let isDragging = false;
+      let startY = 0;
+      let startProgress = 0;
+      const sensitivity = 0.004; // How much drag affects progress
+
+      const getY = (e) => {
+        if (e.touches && e.touches.length) return e.touches[0].clientY;
+        return e.clientY;
+      };
+
+      const onDragStart = (e) => {
+        isDragging = true;
+        startY = getY(e);
+        startProgress = progress;
+        stage.style.cursor = "grabbing";
+        wheel.style.transition = "none";
+      };
+
+      const onDragMove = (e) => {
+        if (!isDragging) return;
+        e.preventDefault();
+        const currentY = getY(e);
+        const deltaY = currentY - startY;
+        const newProgress = startProgress + deltaY * sensitivity * total;
+        setProgress(newProgress);
+      };
+
+      const onDragEnd = () => {
+        if (!isDragging) return;
+        isDragging = false;
+        stage.style.cursor = "";
+        wheel.style.transition = "";
+        // Snap to nearest card
+        progress = Math.round(progress);
+        progress = clamp(progress);
+        sync();
+      };
+
+      // Mouse events
+      stage.addEventListener("mousedown", onDragStart);
+      window.addEventListener("mousemove", onDragMove);
+      window.addEventListener("mouseup", onDragEnd);
+
+      // Touch events - only engage after horizontal movement threshold
+      let touchStartX = 0;
+      let touchStartY = 0;
+      let touchEngaged = false;
+
+      stage.addEventListener("touchstart", (e) => {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        touchEngaged = false;
+        startY = touchStartY;
+        startProgress = progress;
+      }, { passive: true });
+
+      stage.addEventListener("touchmove", (e) => {
+        const dx = Math.abs(e.touches[0].clientX - touchStartX);
+        const dy = Math.abs(e.touches[0].clientY - touchStartY);
+
+        // If user moved more horizontally, engage dial dragging
+        if (!touchEngaged && dx > 15 && dx > dy) {
+          touchEngaged = true;
+          isDragging = true;
+          wheel.style.transition = "none";
+        }
+
+        if (touchEngaged && isDragging) {
+          e.preventDefault();
+          const currentY = e.touches[0].clientY;
+          const deltaY = currentY - startY;
+          const newProgress = startProgress + deltaY * sensitivity * total;
+          setProgress(newProgress);
+        }
+        // Otherwise allow normal page scroll
+      }, { passive: false });
+
+      stage.addEventListener("touchend", () => {
+        if (touchEngaged) {
+          onDragEnd();
+        }
+        touchEngaged = false;
+      });
+
       // Use event delegation on the dates container for robustness
       const datesContainer = section.querySelector('.dial-side__dates');
       if (datesContainer) {
@@ -105,6 +192,18 @@ I like roles where design, systems, and communication intersect. I am comfortabl
           setProgress(idx);
         });
       }
+
+      // Click handler for cards with links
+      cards.forEach((card) => {
+        card.addEventListener('click', (e) => {
+          // Don't navigate if user was dragging
+          if (isDragging) return;
+          const link = card.dataset.link;
+          if (link && card.classList.contains('is-active')) {
+            window.location.href = link;
+          }
+        });
+      });
 
       if (prefersReduce) {
         setActive(0);
@@ -152,17 +251,8 @@ I like roles where design, systems, and communication intersect. I am comfortabl
     perspective: 1400px;
     overflow: visible;
     margin-top: clamp(120px, 12vw, 200px);
-  }
-  .dial-axis {
-    position: absolute;
-    left: 50%;
-    top: 0;
-    bottom: 0;
-    width: 4px;
-    background: linear-gradient(180deg, rgba(46, 92, 255, 0), rgba(46, 92, 255, 0.5), rgba(46, 92, 255, 0));
-    transform: translateX(-50%);
-    z-index: 0;
-    pointer-events: none;
+    cursor: grab;
+    user-select: none;
   }
   .dial-wheel {
     position: absolute;
@@ -205,6 +295,24 @@ I like roles where design, systems, and communication intersect. I am comfortabl
     filter: none;
     transform: translate(-50%, -50%) rotateX(var(--rotate)) translateZ(calc(var(--radius) + 40px));
     pointer-events: auto;
+  }
+  .dial-card.has-link.is-active {
+    cursor: pointer;
+  }
+  .dial-card.has-link.is-active:hover {
+    border-color: var(--accent);
+  }
+  .dial-link-hint {
+    display: block;
+    margin-top: 10px;
+    font-size: 0.85rem;
+    color: var(--accent);
+    font-weight: 500;
+    opacity: 0.8;
+    transition: opacity 0.2s ease;
+  }
+  .dial-card.has-link.is-active:hover .dial-link-hint {
+    opacity: 1;
   }
   .dial-thumb {
     width: 100%;
