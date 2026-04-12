@@ -1,0 +1,42 @@
+---
+title: "CarDeals AI"
+slug: "cardeals-ai"
+year: 2026
+kind: "product"
+status: "shipped"
+stack: ["Next.js", "TypeScript", "Tailwind CSS", "FastAPI", "Python", "PostgreSQL", "GPT-4 Turbo", "Playwright"]
+summary: "AI-powered car lease and financing deal aggregator for LA-area dealerships with natural language search."
+tagline: "Natural-language car lease search, scraped live from dealers."
+live: "https://cardeals-ai.vercel.app"
+repo: "https://github.com/nicoselucafi/cardeals-ai"
+order: 1
+---
+
+## Overview
+CarDeals AI aggregates real-time car lease and financing deals from Los Angeles-area dealerships. Users can search in plain English (e.g., "best RAV4 lease under $350/mo") and receive actual offers scraped from dealer websites, each linked to its original source.
+
+## Key Features
+- **Natural Language Search**: 6-message conversation context powered by GPT-4 Turbo with fallback recommendations
+- **Deal Aggregation**: Automated scraping of 11 dealerships (Toyota and Honda) via Playwright and BeautifulSoup
+- **Filterable Grid**: Sort by payment amount, confidence score, or down payment; bookmark favorites
+- **Side-by-Side Comparison**: Compare up to 3 offers with AI-powered spec augmentation
+- **Usage Control**: 10 free AI searches daily per user with per-source tracking
+
+## What I Built
+- Next.js 14 frontend with TypeScript and Tailwind CSS for responsive deal browsing
+- FastAPI async backend with PostgreSQL (Supabase) for deal storage and retrieval
+- GPT-4 Turbo integration with function calling for natural language query parsing
+- Playwright-based scraper with platform-specific CSS extraction and GPT-4 fallback for unrecognized HTML
+- Supabase authentication with PKCE flow and JWT verification
+- Daily cron execution via GitHub Actions with 48-hour offer expiration
+
+## Tech Architecture
+| Layer | Stack |
+|-------|-------|
+| Frontend | Next.js 14, TypeScript, Tailwind CSS |
+| Backend | FastAPI, Python (async) |
+| Database | PostgreSQL (Supabase) |
+| AI | GPT-4 Turbo with function calling |
+| Scraping | Playwright, BeautifulSoup |
+| Auth | Supabase (PKCE flow, JWT) |
+| Deploy | Vercel (web), Railway (API) |

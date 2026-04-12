@@ -1,0 +1,166 @@
+---
+// Shared Portal component.
+//
+// A clean, flat oval portal linking between worlds. Used on the landing
+// page (dual portals), on /studio (peek into /arcade), and on /arcade
+// (step back to the landing).
+//
+// Design notes:
+//  - Shape: `border-radius: 50%` ellipse — crisp, no blur, no halo.
+//  - Fill: a subtle interior gradient so it has a touch of depth
+//    without looking pasted-on.
+//  - No external glow, halo, or box-shadow. Hover = small scale only.
+//  - Cheap to render: one rounded rect with a static gradient.
+interface Props {
+  variant: "arcade" | "studio" | "home";
+  href: string;
+  label: string;
+  caption: string;
+  /**
+   * Kept for API compatibility — oval is symmetric so this is a no-op.
+   */
+  flip?: boolean;
+  /**
+   * Value for data-rift so the Header click-tracker records coords for
+   * the view-transition rift-open animation.
+   */
+  riftKey?: string;
+  /**
+   * Accessible label for the link.
+   */
+  ariaLabel?: string;
+}
+
+const {
+  variant,
+  href,
+  label,
+  caption,
+  riftKey = variant,
+  ariaLabel,
+} = Astro.props;
+---
+
+<div class="rift-wrap" data-variant={variant}>
+  <a
+    class="rift"
+    href={href}
+    data-rift={riftKey}
+    aria-label={ariaLabel ?? `Step through the portal to the ${variant}`}
+  >
+    <span class="rift__label">
+      <span class="rift__peek">{label}</span>
+      <span class="rift__caption">{caption}</span>
+    </span>
+  </a>
+</div>
+
+<style>
+  .rift-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 5 / 4;
+  }
+
+  .rift {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    overflow: hidden;
+    text-decoration: none;
+    transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+    will-change: transform;
+  }
+
+  .rift:hover {
+    transform: scale(1.035);
+  }
+
+  .rift__label {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 0 24px;
+    text-align: center;
+  }
+
+  .rift__peek {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-variation-settings: "opsz" 144, "SOFT" 100, "wght" 500;
+    font-size: clamp(2rem, 4.8vw, 3.4rem);
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+  }
+
+  .rift__caption {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  /* ================ ARCADE ================ */
+  .rift-wrap[data-variant="arcade"] .rift {
+    background:
+      radial-gradient(
+        ellipse at 50% 42%,
+        #1a1f3d 0%,
+        #0a0c1a 70%
+      );
+    border: 1px solid rgba(0, 255, 209, 0.22);
+  }
+
+  .rift-wrap[data-variant="arcade"] .rift__peek {
+    color: #00ffd1;
+  }
+
+  .rift-wrap[data-variant="arcade"] .rift__caption {
+    color: rgba(0, 255, 209, 0.7);
+  }
+
+  /* ================ STUDIO ================ */
+  .rift-wrap[data-variant="studio"] .rift {
+    background:
+      radial-gradient(
+        ellipse at 50% 42%,
+        #fff6e8 0%,
+        #f2e8d3 70%
+      );
+    border: 1px solid rgba(255, 87, 51, 0.2);
+  }
+
+  .rift-wrap[data-variant="studio"] .rift__peek {
+    color: #ff5733;
+  }
+
+  .rift-wrap[data-variant="studio"] .rift__caption {
+    color: rgba(62, 66, 86, 0.7);
+  }
+
+  /* ================ HOME ================ */
+  .rift-wrap[data-variant="home"] .rift {
+    background:
+      radial-gradient(
+        ellipse at 50% 42%,
+        #fff6e8 0%,
+        #f0e4cc 70%
+      );
+    border: 1px solid rgba(255, 87, 51, 0.22);
+  }
+
+  .rift-wrap[data-variant="home"] .rift__peek {
+    color: #ff5733;
+  }
+
+  .rift-wrap[data-variant="home"] .rift__caption {
+    color: rgba(62, 66, 86, 0.7);
+  }
+</style>

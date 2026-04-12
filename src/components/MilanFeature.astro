@@ -1,0 +1,460 @@
+---
+// Cinematic full-bleed feature section spotlighting the two
+// consecutive game-design internships at 505 Games / Avantgarden
+// in Milan, working on Among the Trolls. Lives on the landing page.
+---
+
+<section class="milan" id="milan" aria-labelledby="milan-heading">
+  <div class="milan__backdrop" aria-hidden="true">
+    <img src="/images/att.jpg" alt="" loading="lazy" decoding="async" />
+    <div class="milan__scrim"></div>
+    <div class="milan__grain"></div>
+  </div>
+
+  <div class="milan__content">
+    <p class="milan__kicker">
+      <span class="milan__dot" aria-hidden="true"></span>
+      // 2024 — 2025 · milano, it
+    </p>
+
+    <h2 id="milan-heading" class="milan__title">
+      Two summers in <em>Milan.</em>
+    </h2>
+
+    <p class="milan__lede">
+      Two consecutive game-design internships at
+      <strong>505 Games / Avantgarden</strong>, shipping systems for
+      <em>Among the Trolls</em> — a first-person survival adventure.
+      Worked fully in Italian. Relocated both summers.
+    </p>
+
+    <div class="milan__cards">
+      <article class="milan-card">
+        <header class="milan-card__head">
+          <p class="milan-card__year">Summer 2024</p>
+          <span class="milan-card__tag">first run</span>
+        </header>
+        <h3 class="milan-card__title">Game Design Intern</h3>
+        <p class="milan-card__org">505 Games · Avantgarden · Milan</p>
+        <ul class="milan-card__list">
+          <li>Prototyped building and magic mechanics in UE5 — placement rules, decision logic, and visual feedback</li>
+          <li>Built 3 dungeon prototype levels from modular UE5 pieces with smart wall and door behaviors</li>
+          <li>Authored ~7 Confluence specs with flowcharts and edge cases for engineering handoff</li>
+          <li>QA on <em>Brothers: A Tale of Two Sons Remake</em> — frame-drop bug with video repro</li>
+        </ul>
+        <div class="milan-card__photos">
+          <div class="milan-card__photo">
+            <img src="/images/lucamilan.jpg" alt="Milan, summer 2024" loading="lazy" />
+          </div>
+        </div>
+      </article>
+
+      <article class="milan-card milan-card--accent">
+        <header class="milan-card__head">
+          <p class="milan-card__year">Summer 2025</p>
+          <span class="milan-card__tag">encore</span>
+        </header>
+        <h3 class="milan-card__title">Game Design Intern</h3>
+        <p class="milan-card__org">505 Games · Avantgarden · Milan</p>
+        <ul class="milan-card__list">
+          <li>Owned quest and dialogue flow via the Narrative plugin — 12+ quests and 12+ dialogue sequences with event-driven triggers</li>
+          <li>Broke down feature work in Jira and aligned weekly priorities with design leads</li>
+          <li>Designed interaction flows and annotated mechanics in Figma for review and engineering handoff</li>
+          <li>Collaborated daily in <em>Italian</em> across design, engineering, and QA</li>
+        </ul>
+        <div class="milan-card__photos">
+          <div class="milan-card__photo">
+            <img src="/images/505-summer-2025.jpg" alt="Milan, summer 2025" loading="lazy" />
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <footer class="milan__foot">
+      <span class="milan__chip">Fluent Italian</span>
+      <span class="milan__chip">UE5 · Confluence · Jira · Perforce</span>
+      <span class="milan__credit">
+        // Among the Trolls · Avantgarden / 505 Games
+      </span>
+    </footer>
+  </div>
+</section>
+
+<style>
+  .milan {
+    position: relative;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    min-height: clamp(640px, 82vh, 920px);
+    display: grid;
+    align-items: center;
+    padding: clamp(60px, 10vw, 140px) clamp(28px, 6vw, 96px);
+    overflow: hidden;
+    isolation: isolate;
+    color: #fff5e8;
+    scroll-margin-top: 90px;
+  }
+
+  /* ------------------------------------------------------------------
+     Backdrop: photo + dark scrim + subtle grain
+  ------------------------------------------------------------------ */
+  .milan__backdrop {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  .milan__backdrop img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: saturate(0.85) contrast(1.05) brightness(0.72);
+    transform: scale(1.02);
+  }
+
+  .milan__scrim {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(
+        100deg,
+        rgba(6, 8, 20, 0.92) 0%,
+        rgba(6, 8, 20, 0.78) 38%,
+        rgba(6, 8, 20, 0.42) 68%,
+        rgba(6, 8, 20, 0.18) 100%
+      ),
+      radial-gradient(
+        ellipse at 20% 70%,
+        rgba(255, 120, 60, 0.18) 0%,
+        transparent 50%
+      );
+    pointer-events: none;
+  }
+
+  .milan__grain {
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(255, 255, 255, 0.02) 0 1px,
+      transparent 1px 3px
+    );
+    mix-blend-mode: overlay;
+    pointer-events: none;
+  }
+
+  /* ------------------------------------------------------------------
+     Content
+  ------------------------------------------------------------------ */
+  .milan__content {
+    position: relative;
+    z-index: 1;
+    max-width: 1180px;
+    width: 100%;
+    margin: 0 auto;
+    display: grid;
+    gap: clamp(20px, 3vw, 36px);
+  }
+
+  .milan__kicker {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(255, 245, 232, 0.78);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0;
+  }
+
+  .milan__dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #ff7a3d;
+    box-shadow:
+      0 0 0 3px rgba(255, 122, 61, 0.18),
+      0 0 18px rgba(255, 122, 61, 0.6);
+    animation: milan-pulse 2.4s ease-in-out infinite;
+  }
+
+  @keyframes milan-pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50%      { transform: scale(1.25); opacity: 0.7; }
+  }
+
+  .milan__title {
+    font-family: var(--font-display);
+    font-variation-settings: "opsz" 144, "SOFT" 40, "wght" 500;
+    font-size: clamp(3rem, 9vw, 6.6rem);
+    line-height: 0.9;
+    letter-spacing: -0.035em;
+    margin: 0;
+    max-width: 16ch;
+    color: #fff5e8;
+    text-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+  }
+
+  .milan__title em {
+    font-style: italic;
+    font-variation-settings: "opsz" 144, "SOFT" 100, "wght" 500;
+    color: #ffb78a;
+  }
+
+  .milan__lede {
+    font-family: var(--font-body);
+    font-size: clamp(1.05rem, 1.55vw, 1.3rem);
+    line-height: 1.6;
+    max-width: 60ch;
+    color: rgba(255, 245, 232, 0.92);
+    margin: 0;
+  }
+
+  .milan__lede strong {
+    color: #fff5e8;
+    font-weight: 600;
+  }
+
+  .milan__lede em {
+    font-style: italic;
+    color: #ffb78a;
+  }
+
+  /* ------------------------------------------------------------------
+     Cards
+  ------------------------------------------------------------------ */
+  .milan__cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(16px, 2vw, 28px);
+    margin-top: clamp(8px, 2vw, 20px);
+  }
+
+  .milan-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: rgba(10, 12, 24, 0.68);
+    backdrop-filter: blur(14px) saturate(120%);
+    -webkit-backdrop-filter: blur(14px) saturate(120%);
+    border: 1px solid rgba(255, 245, 232, 0.14);
+    border-radius: 6px;
+    padding: clamp(20px, 2.6vw, 32px);
+    transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
+                border-color 0.3s ease,
+                box-shadow 0.35s ease;
+  }
+
+  .milan-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(255, 183, 138, 0.45);
+    box-shadow: 0 18px 50px -20px rgba(255, 120, 60, 0.35);
+  }
+
+  .milan-card--accent {
+    border-color: rgba(255, 183, 138, 0.28);
+    box-shadow: 0 0 0 1px rgba(255, 183, 138, 0.08) inset;
+  }
+
+  .milan-card__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .milan-card__year {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #ffb78a;
+    margin: 0;
+  }
+
+  .milan-card__tag {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255, 245, 232, 0.55);
+    padding: 3px 8px;
+    border: 1px dashed rgba(255, 245, 232, 0.22);
+    border-radius: 999px;
+  }
+
+  .milan-card__title {
+    font-family: var(--font-display);
+    font-variation-settings: "opsz" 72, "SOFT" 30, "wght" 500;
+    font-size: clamp(1.35rem, 2vw, 1.75rem);
+    line-height: 1.1;
+    margin: 0 0 6px;
+    color: #fff5e8;
+  }
+
+  .milan-card__org {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255, 245, 232, 0.6);
+    margin: 0 0 18px;
+  }
+
+  .milan-card__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 10px;
+  }
+
+  .milan-card__list li {
+    position: relative;
+    padding-left: 20px;
+    font-size: 0.92rem;
+    line-height: 1.5;
+    color: rgba(255, 245, 232, 0.88);
+  }
+
+  .milan-card__list li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.55em;
+    width: 10px;
+    height: 2px;
+    background: #ff7a3d;
+  }
+
+  .milan-card__list em {
+    font-style: italic;
+    color: #ffb78a;
+  }
+
+  /* ------------------------------------------------------------------
+     Photo strip (2 placeholders per card)
+  ------------------------------------------------------------------ */
+  .milan-card__photos {
+    margin-top: auto;
+    padding-top: 20px;
+  }
+
+  .milan-card__photo {
+    aspect-ratio: 4 / 3;
+    border-radius: 4px;
+    border: 1px dashed rgba(255, 245, 232, 0.22);
+    background:
+      repeating-linear-gradient(
+        45deg,
+        rgba(255, 245, 232, 0.04) 0 8px,
+        rgba(255, 245, 232, 0.015) 8px 16px
+      );
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+  }
+
+  .milan-card__photo::after {
+    content: "// photo";
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255, 245, 232, 0.38);
+  }
+
+  .milan-card__photo img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    z-index: 1;
+  }
+
+  .milan-card__photo:has(img) {
+    border-style: solid;
+    border-color: rgba(255, 245, 232, 0.18);
+    background: #0a0c18;
+  }
+
+  .milan-card__photo:has(img)::after {
+    display: none;
+  }
+
+  .milan-card--accent .milan-card__photo {
+    border-color: rgba(255, 183, 138, 0.3);
+  }
+
+  .milan-card--accent .milan-card__photo::after {
+    color: rgba(255, 183, 138, 0.55);
+  }
+
+  .milan-card:hover .milan-card__photo {
+    border-color: rgba(255, 183, 138, 0.4);
+  }
+
+  /* ------------------------------------------------------------------
+     Footer
+  ------------------------------------------------------------------ */
+  .milan__foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-top: clamp(12px, 2vw, 24px);
+  }
+
+  .milan__chip {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 6px 12px;
+    border: 1px solid rgba(255, 183, 138, 0.4);
+    border-radius: 999px;
+    color: #ffb78a;
+    background: rgba(255, 122, 61, 0.08);
+  }
+
+  .milan__credit {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255, 245, 232, 0.5);
+    margin-left: auto;
+  }
+
+  /* ------------------------------------------------------------------
+     Responsive
+  ------------------------------------------------------------------ */
+  @media (max-width: 720px) {
+    .milan {
+      padding: clamp(56px, 12vw, 96px) clamp(20px, 6vw, 32px);
+      min-height: auto;
+    }
+    .milan__cards {
+      grid-template-columns: 1fr;
+    }
+    .milan__credit {
+      margin-left: 0;
+      width: 100%;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .milan__dot {
+      animation: none !important;
+    }
+  }
+</style>

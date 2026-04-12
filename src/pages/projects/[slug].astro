@@ -1,36 +1,162 @@
 ---
 import Header from "../../components/Header.astro";
-import DynamicIsland from "../../components/DynamicIsland.astro";
-import { getCollection } from "astro:content";
+import { getCollection, render } from "astro:content";
 
 export async function getStaticPaths() {
   const projects = await getCollection("projects", ({ data }) => !data.draft);
   return projects.map((p) => ({ params: { slug: p.data.slug }, props: { project: p } }));
 }
 const { project } = Astro.props;
+const { Content } = await render(project);
+const isGame = project.data.kind === "game";
+const world = isGame ? "arcade" : "product";
+const backHref = isGame ? "/arcade" : "/studio";
+const backLabel = isGame ? "← Back to Arcade" : "← Back to Studio";
 ---
-<html lang="en">
+<html lang="en" data-world={world}>
   <head>
     <meta charset="utf-8" />
     <title>{project.data.title} • Luca Ficano Latimer</title>
     <meta name="description" content={project.data.summary} />
     <link rel="stylesheet" href="/site.css">
+    <style>
+      .demo-section {
+        margin: 32px 0;
+      }
+      .demo-section h2 {
+        font-size: 1.5rem;
+        margin-bottom: 16px;
+      }
+      .demo-video-wrap {
+        position: relative;
+        width: 100%;
+        border-radius: 18px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        background: #000;
+        box-shadow: var(--shadow);
+      }
+      .demo-video-wrap video {
+        display: block;
+        width: 100%;
+        border-radius: 18px;
+      }
+      .demo-iframe-wrap {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 16 / 10;
+        border-radius: 18px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        background: var(--bg-soft);
+        box-shadow: var(--shadow);
+      }
+      .demo-iframe-wrap iframe {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+      }
+      .demo-fallback {
+        margin-top: 10px;
+        font-size: 0.88rem;
+        color: var(--muted);
+      }
+      .demo-fallback a {
+        color: var(--accent);
+        text-decoration: underline;
+      }
+
+      /* MDX content — let long things reflow on mobile */
+      article {
+        overflow-wrap: break-word;
+      }
+      article table {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        border-collapse: collapse;
+        margin: 16px 0;
+        font-size: 0.9rem;
+      }
+      article table th,
+      article table td {
+        padding: 8px 12px;
+        border-bottom: 1px solid var(--border);
+        text-align: left;
+        white-space: nowrap;
+      }
+      article pre {
+        max-width: 100%;
+        overflow-x: auto;
+      }
+      article img {
+        max-width: 100%;
+        height: auto;
+      }
+
+      @media (max-width: 640px) {
+        .demo-section h2 {
+          font-size: 1.25rem;
+        }
+        .demo-video-wrap,
+        .demo-iframe-wrap {
+          border-radius: 14px;
+        }
+        .demo-video-wrap video {
+          border-radius: 14px;
+        }
+        article table {
+          font-size: 0.82rem;
+        }
+      }
+    </style>
   </head>
   <body>
-    <Header />
-    <DynamicIsland />
+    <Header world={world} />
     <main class="container" style="max-width:900px">
-      <a class="btn" href="/projects">← Back to Projects</a>
+      <a class="btn" href={backHref}>{backLabel}</a>
       <h1>{project.data.title}</h1>
       <div class="kicker" style="margin-bottom:10px;">
         {project.data.year}{project.data.stack?.length ? ` • ${project.data.stack.join(", ")}` : ""}
       </div>
       <article style="line-height:1.65">
-        <slot />
+        <Content />
       </article>
+
+      {project.data.video ? (
+        <section class="demo-section">
+          <h2>Demo</h2>
+          <div class="demo-video-wrap">
+            <video controls preload="metadata" playsinline>
+              <source src={project.data.video} type="video/mp4" />
+              Your browser does not support the video element.
+            </video>
+          </div>
+        </section>
+      ) : project.data.demo ? (
+        <section class="demo-section">
+          <h2>Live Demo</h2>
+          <div class="demo-iframe-wrap">
+            <iframe
+              src={project.data.demo}
+              title={`${project.data.title} live demo`}
+              loading="eager"
+              allow="clipboard-write"
+            ></iframe>
+          </div>
+          <p class="demo-fallback">
+            If the demo doesn't load, <a href={project.data.demo} target="_blank" rel="noreferrer">open it in a new tab</a>.
+          </p>
+        </section>
+      ) : null}
+
       <div style="margin-top:16px; display:flex; gap:12px; flex-wrap:wrap;">
         {project.data.repo ? <a class="btn" href={project.data.repo} target="_blank" rel="noreferrer">Repository</a> : null}
-        {project.data.live ? <a class="btn primary" href={project.data.live} target="_blank" rel="noreferrer">Play</a> : null}
+        {project.data.live ? <a class="btn primary" href={project.data.live} target="_blank" rel="noreferrer">{isGame ? "Play" : "Visit"}</a> : null}
       </div>
     </main>
   </body>

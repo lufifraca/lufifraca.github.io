@@ -1,0 +1,186 @@
+---
+import Header from "../components/Header.astro";
+import ArcadeLevelSelect from "../components/ArcadeLevelSelect.astro";
+import Rift from "../components/Rift.astro";
+import { SITE_AUTHOR } from "../consts";
+import { ClientRouter } from "astro:transitions";
+---
+<html lang="en" data-world="arcade">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Arcade · {SITE_AUTHOR}</title>
+    <meta
+      name="description"
+      content="The arcade side of the studio — game design, game-dev projects, and industry work."
+    />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="stylesheet" href="/site.css" />
+    <ClientRouter />
+    <style>
+      main.arcade {
+        position: relative;
+        padding-top: clamp(32px, 6vw, 72px);
+      }
+
+      /* Arcade hero */
+      .arcade-hero {
+        position: relative;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: clamp(20px, 3vw, 32px);
+        padding: clamp(40px, 8vw, 96px) 0 clamp(72px, 10vw, 140px);
+      }
+
+      .arcade-hero__copy {
+        max-width: 60ch;
+        position: relative;
+        z-index: 2;
+      }
+
+      /* Home rift placement — absolute peek in the hero,
+         styling lives in the shared Rift.astro component */
+      .arcade-home-rift {
+        position: absolute;
+        right: clamp(16px, 2vw, 40px);
+        bottom: clamp(-40px, -4vw, -12px);
+        width: clamp(260px, 28vw, 400px);
+        z-index: 3;
+      }
+
+      @media (max-width: 900px) {
+        .arcade-home-rift {
+          position: relative;
+          right: auto;
+          bottom: auto;
+          width: min(340px, 100%);
+          margin-top: 32px;
+        }
+      }
+
+      .arcade-mark {
+        font-family: var(--font-mono);
+        font-size: 0.7rem;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        color: var(--accent);
+        text-shadow: 0 0 12px rgba(0, 255, 209, 0.4);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .arcade-mark::before {
+        content: "";
+        width: 10px;
+        height: 10px;
+        background: var(--accent);
+        box-shadow: 0 0 0 3px rgba(0, 255, 209, 0.2),
+          0 0 20px rgba(0, 255, 209, 0.6);
+        border-radius: 50%;
+        animation: beat 1.4s ease-in-out infinite;
+      }
+
+      @keyframes beat {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.3); }
+      }
+
+      .arcade-hero h1 {
+        font-family: var(--font-display);
+        font-variation-settings: "opsz" 144, "SOFT" 60, "wght" 500;
+        font-size: clamp(3rem, 10vw, 8.5rem);
+        line-height: 0.9;
+        letter-spacing: -0.04em;
+        margin: 14px 0 clamp(18px, 3vw, 30px);
+        color: var(--text);
+      }
+
+      .arcade-hero h1 em {
+        font-style: italic;
+        font-variation-settings: "opsz" 144, "SOFT" 100, "wght" 500;
+        color: var(--accent);
+        text-shadow: 0 0 40px rgba(0, 255, 209, 0.35);
+      }
+
+      .arcade-hero p {
+        max-width: 54ch;
+        color: var(--text-soft);
+        font-size: clamp(1rem, 1.6vw, 1.2rem);
+        line-height: 1.6;
+      }
+
+      .arcade-hero .cta-row {
+        margin-top: clamp(24px, 4vw, 36px);
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+      }
+
+      /* "Back to studio" footer link */
+      .exit-link {
+        margin-top: 60px;
+        text-align: center;
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+
+      .exit-link a {
+        color: var(--muted-strong);
+        border-bottom: 1px solid transparent;
+        transition: color 0.2s ease, border-color 0.2s ease;
+      }
+
+      .exit-link a:hover {
+        color: var(--accent);
+        border-bottom-color: var(--accent);
+      }
+    </style>
+  </head>
+
+  <body>
+    <Header world="arcade" />
+
+    <main class="container arcade">
+      <section class="arcade-hero">
+        <div class="arcade-hero__copy">
+          <div class="arcade-mark">
+            <span>SIGNAL OK · PRESS START</span>
+          </div>
+          <h1>
+            Welcome to the <em>arcade.</em>
+          </h1>
+          <p>
+            This is the other half of the studio — where I make games. Two years at 505 Games
+            on <em>Among the Trolls</em>, two student games in Unity, and a growing list of
+            prototypes. Pick a cabinet below to play.
+          </p>
+          <div class="cta-row">
+            <a class="btn primary" href="#levels">Pick a level</a>
+          </div>
+        </div>
+
+        <!-- symmetric rift back home -->
+        <div class="arcade-home-rift">
+          <Rift
+            variant="home"
+            href="/"
+            label="home."
+            caption="// exit the arcade"
+            riftKey="home"
+            flip
+            ariaLabel="Step back through the rift to the landing page"
+          />
+        </div>
+      </section>
+
+      <ArcadeLevelSelect />
+
+      <div class="exit-link">
+        <a href="/studio">← exit to studio</a>
+      </div>
+    </main>
+  </body>
+</html>

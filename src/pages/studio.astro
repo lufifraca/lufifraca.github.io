@@ -1,0 +1,273 @@
+---
+import Header from "../components/Header.astro";
+import ProductKanban from "../components/ProductKanban.astro";
+import Rift from "../components/Rift.astro";
+import { SITE_AUTHOR } from "../consts";
+import { ClientRouter } from "astro:transitions";
+---
+<html lang="en" data-world="product">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Studio · {SITE_AUTHOR}</title>
+    <meta
+      name="description"
+      content="The studio side — products I've shipped end-to-end, from problem framing through deploy."
+    />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="stylesheet" href="/site.css" />
+    <ClientRouter />
+    <style>
+      :target { scroll-margin-top: 110px; }
+
+      main.studio {
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* ---------- HERO ---------- */
+      .hero {
+        position: relative;
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: clamp(24px, 4vw, 64px);
+        align-items: end;
+        padding: clamp(48px, 8vw, 120px) 0 clamp(60px, 10vw, 140px);
+        min-height: calc(100vh - 110px);
+      }
+
+      .hero-mark {
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--muted-strong);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: clamp(14px, 2vw, 28px);
+      }
+
+      .hero-mark::before {
+        content: "";
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: var(--accent);
+        box-shadow: 0 0 0 4px var(--accent-soft);
+        animation: blink 2.6s ease-in-out infinite;
+      }
+
+      @keyframes blink {
+        0%, 60%, 100% { opacity: 1; }
+        30% { opacity: 0.25; }
+      }
+
+      .hero h1 {
+        font-family: var(--font-display);
+        font-variation-settings: "opsz" 144, "SOFT" 40, "wght" 500;
+        font-size: clamp(3rem, 9vw, 8rem);
+        line-height: 0.9;
+        letter-spacing: -0.04em;
+        margin: 0 0 clamp(18px, 3vw, 32px);
+        color: var(--text);
+      }
+
+      .hero h1 em {
+        font-style: italic;
+        font-variation-settings: "opsz" 144, "SOFT" 80, "wght" 500;
+        color: var(--accent);
+      }
+
+      .hero-tagline {
+        font-family: var(--font-body);
+        font-size: clamp(1.05rem, 1.6vw, 1.3rem);
+        line-height: 1.55;
+        max-width: 52ch;
+        color: var(--text-soft);
+        margin: 0 0 clamp(24px, 4vw, 40px);
+      }
+
+      .hero-tagline strong {
+        font-weight: 600;
+        color: var(--text);
+      }
+
+      .hero-ctas {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+      }
+
+      /* ---------- RIFT PLACEMENT (absolute peek-through) ---------- */
+      .hero-rift {
+        position: absolute;
+        right: clamp(16px, 2vw, 40px);
+        bottom: clamp(-40px, -4vw, -12px);
+        width: clamp(260px, 28vw, 400px);
+        z-index: 4;
+      }
+
+      /* ---------- DECK TEASER (below the hero) ---------- */
+      .teaser {
+        position: relative;
+        padding: clamp(60px, 10vw, 120px) 0;
+        border-top: 1px solid var(--border);
+      }
+
+      .teaser-head {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 24px;
+        flex-wrap: wrap;
+        margin-bottom: clamp(28px, 5vw, 56px);
+      }
+
+      .teaser-head h2 {
+        font-family: var(--font-display);
+        font-variation-settings: "opsz" 144, "SOFT" 30, "wght" 500;
+        font-size: clamp(2rem, 5vw, 3.5rem);
+        margin: 0;
+        max-width: 16ch;
+      }
+
+      .teaser-head h2 em {
+        font-style: italic;
+        color: var(--accent);
+      }
+
+      .teaser-head p {
+        max-width: 40ch;
+        margin: 0;
+        color: var(--muted-strong);
+      }
+
+      .teaser-foot {
+        margin-top: clamp(28px, 4vw, 44px);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+        padding-top: 20px;
+        border-top: 1px dashed var(--border);
+      }
+
+      .teaser-foot__link {
+        font-family: var(--font-mono);
+        font-size: 0.78rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--text);
+        border-bottom: 1.5px solid var(--ink);
+        padding-bottom: 2px;
+        transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+      }
+
+      .teaser-foot__link:hover {
+        color: var(--accent);
+        border-bottom-color: var(--accent);
+        transform: translateX(-2px);
+      }
+
+      .teaser-foot__note {
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .teaser-foot__note a {
+        color: var(--accent);
+        border-bottom: 1px dotted var(--accent);
+      }
+
+      /* ---------- RESPONSIVE ---------- */
+      @media (max-width: 900px) {
+        .hero {
+          grid-template-columns: 1fr;
+          gap: 48px;
+          padding-top: clamp(32px, 6vw, 60px);
+          min-height: auto;
+        }
+        .hero-rift {
+          position: relative;
+          right: auto;
+          bottom: auto;
+          width: min(340px, 100%);
+          margin-top: 12px;
+        }
+      }
+
+      @media (max-width: 520px) {
+        .hero h1 {
+          font-size: clamp(2.6rem, 12vw, 4rem);
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <Header world="product" />
+
+    <main class="container studio">
+      <!-- ============== HERO ============== -->
+      <section class="hero">
+        <div class="hero-copy">
+          <div class="hero-mark">
+            <span>// the_studio · products shipped end-to-end</span>
+          </div>
+
+          <h1>
+            Welcome to the <em>studio.</em>
+          </h1>
+
+          <p class="hero-tagline">
+            <strong>This is where the products live.</strong>
+            Full-stack builds, case studies, and things I've shipped from problem framing
+            through deploy. The board below is a snapshot of what's live, in flight, and on deck.
+          </p>
+
+          <div class="hero-ctas">
+            <a class="btn primary" href="#work">See the board</a>
+          </div>
+        </div>
+
+        <!-- peek-through rift to the arcade -->
+        <div class="hero-rift">
+          <Rift
+            variant="arcade"
+            href="/arcade"
+            label="arcade."
+            caption="// step through"
+            riftKey="arcade"
+            ariaLabel="Step through the rift to the arcade"
+          />
+        </div>
+      </section>
+
+      <!-- ============== KANBAN ============== -->
+      <section class="teaser" id="work">
+        <div class="teaser-head">
+          <h2>Things I've <em>shipped</em>.</h2>
+          <p>
+            Products I've built end-to-end — from problem framing through deploy. Think of the
+            board below as a snapshot of what's live, in flight, and on deck.
+          </p>
+        </div>
+
+        <ProductKanban />
+
+        <div class="teaser-foot">
+          <a class="teaser-foot__link" href="/">← home</a>
+          <span class="teaser-foot__note">
+            Games live in the <a href="/arcade">arcade</a>.
+          </span>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

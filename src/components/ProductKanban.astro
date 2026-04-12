@@ -1,0 +1,429 @@
+---
+// -----------------------------------------------------------------------------
+// ProductKanban — the product-roadmap board for the Studio homepage.
+// Pulls from the `projects` collection, filters to kind === "product",
+// groups by status (shipped / in-flight / on-deck), and renders three
+// brutalist cards-in-columns. Games are filtered out and live on /arcade.
+// -----------------------------------------------------------------------------
+import { getCollection } from "astro:content";
+
+type Status = "shipped" | "in-flight" | "on-deck";
+
+const products = (
+  await getCollection(
+    "projects",
+    ({ data }) => !data.draft && data.kind === "product"
+  ).catch(() => [])
+).sort((a, b) => (a.data.order ?? 0) - (b.data.order ?? 0));
+
+const columns: {
+  id: Status;
+  title: string;
+  sub: string;
+}[] = [
+  { id: "shipped", title: "Shipped", sub: "// live in the wild" },
+  { id: "in-flight", title: "In Flight", sub: "// building now" },
+  { id: "on-deck", title: "On Deck", sub: "// next up" },
+];
+
+const byStatus = (s: Status) =>
+  products.filter((p) => p.data.status === s);
+
+// Timestamp so the board feels like a live roadmap artifact.
+const today = new Date();
+const updated = today.toLocaleDateString("en-US", {
+  month: "short",
+  day: "numeric",
+  year: "numeric",
+});
+---
+
+<div class="kanban-shell">
+  <div class="kanban-meta">
+    <span class="kanban-meta__label">// roadmap.board</span>
+    <span class="kanban-meta__dot" aria-hidden="true"></span>
+    <span class="kanban-meta__updated">updated {updated}</span>
+  </div>
+
+  <div class="kanban" role="list">
+    {columns.map((col) => {
+      const items = byStatus(col.id);
+      return (
+        <section class="kanban-col" data-status={col.id} role="listitem">
+          <header class="kanban-col__head">
+            <div class="kanban-col__title">
+              <span class="kanban-col__dot" aria-hidden="true"></span>
+              <h3>{col.title}</h3>
+              <span class="kanban-col__count">{items.length}</span>
+            </div>
+            <span class="kanban-col__sub">{col.sub}</span>
+          </header>
+
+          <div class="kanban-col__cards">
+            {items.length === 0 ? (
+              <div class="kanban-empty">
+                <span>nothing here yet</span>
+              </div>
+            ) : (
+              items.map((p) => (
+                <a class="kcard" href={`/projects/${p.data.slug}`}>
+                  <div class="kcard__top">
+                    <span class="kcard__year">{p.data.year}</span>
+                    <span class="kcard__status-pin" aria-hidden="true"></span>
+                  </div>
+                  <h4 class="kcard__title">{p.data.title}</h4>
+                  <p class="kcard__summary">
+                    {p.data.tagline ?? p.data.summary}
+                  </p>
+                  {p.data.stack && p.data.stack.length > 0 && (
+                    <div class="kcard__stack">
+                      {p.data.stack.slice(0, 4).map((s) => (
+                        <span class="kcard__chip">{s}</span>
+                      ))}
+                      {p.data.stack.length > 4 && (
+                        <span class="kcard__chip kcard__chip--more">
+                          +{p.data.stack.length - 4}
+                        </span>
+                      )}
+                    </div>
+                  )}
+                  <div class="kcard__foot">
+                    <span class="kcard__go">open ↗</span>
+                    {p.data.live ? (
+                      <span class="kcard__live">● live</span>
+                    ) : p.data.repo ? (
+                      <span class="kcard__repo">● repo</span>
+                    ) : null}
+                  </div>
+                </a>
+              ))
+            )}
+          </div>
+        </section>
+      );
+    })}
+  </div>
+</div>
+
+<style>
+  /* ---------- SHELL / META STRIP ---------- */
+  .kanban-shell {
+    position: relative;
+  }
+
+  .kanban-meta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+    padding: 6px 12px;
+    border: 1px dashed var(--border-strong);
+    border-radius: 999px;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted-strong);
+    background: color-mix(in srgb, var(--bg-soft) 80%, transparent);
+  }
+
+  .kanban-meta__dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 999px;
+    background: #22c55e;
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.18);
+  }
+
+  .kanban-meta__updated {
+    color: var(--muted);
+  }
+
+  /* ---------- KANBAN GRID ---------- */
+  .kanban {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(16px, 2vw, 28px);
+    align-items: start;
+  }
+
+  /* ---------- COLUMN ---------- */
+  .kanban-col {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 22px 18px 24px;
+    background: var(--card);
+    border: 2px solid var(--ink);
+    border-radius: 10px;
+    box-shadow: 8px 8px 0 0 var(--ink);
+    min-height: 220px;
+  }
+
+  .kanban-col::before {
+    content: "";
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    height: 8px;
+    background: var(--accent);
+    border-radius: 10px 10px 0 0;
+    border: 2px solid var(--ink);
+    border-bottom: none;
+  }
+
+  .kanban-col[data-status="in-flight"]::before {
+    background: #f7b500;
+  }
+  .kanban-col[data-status="on-deck"]::before {
+    background: #6b7086;
+  }
+
+  .kanban-col__head {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-top: 10px;
+  }
+
+  .kanban-col__title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .kanban-col__dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    background: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+  .kanban-col[data-status="in-flight"] .kanban-col__dot {
+    background: #f7b500;
+    box-shadow: 0 0 0 3px rgba(247, 181, 0, 0.2);
+  }
+  .kanban-col[data-status="on-deck"] .kanban-col__dot {
+    background: #6b7086;
+    box-shadow: 0 0 0 3px rgba(107, 112, 134, 0.2);
+  }
+
+  .kanban-col__title h3 {
+    font-family: var(--font-display);
+    font-variation-settings: "opsz" 144, "SOFT" 30, "wght" 500;
+    font-size: 1.55rem;
+    margin: 0;
+    color: var(--text);
+    line-height: 1;
+  }
+
+  .kanban-col__count {
+    margin-left: auto;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--muted-strong);
+    background: color-mix(in srgb, var(--ink) 8%, transparent);
+    padding: 3px 9px;
+    border-radius: 999px;
+  }
+
+  .kanban-col__sub {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .kanban-col__cards {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .kanban-empty {
+    border: 1.5px dashed var(--border-strong);
+    border-radius: 8px;
+    padding: 32px 16px;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: color-mix(in srgb, var(--ink) 3%, transparent);
+  }
+
+  /* ---------- CARD ---------- */
+  .kcard {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 16px 14px 14px;
+    background: var(--bg-soft);
+    border: 1.5px solid var(--ink);
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--text);
+    box-shadow: 4px 4px 0 0 var(--ink);
+    transition:
+      transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1),
+      box-shadow 0.25s ease,
+      background 0.2s ease;
+  }
+
+  /* give each card a tiny bit of personality without breaking alignment */
+  .kcard:nth-child(odd) {
+    transform: rotate(-0.4deg);
+  }
+  .kcard:nth-child(even) {
+    transform: rotate(0.3deg);
+  }
+
+  .kcard:hover {
+    transform: translate(-3px, -3px) rotate(0deg);
+    box-shadow: 8px 8px 0 0 var(--accent);
+    background: var(--card);
+  }
+
+  .kcard:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  .kcard__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .kcard__year {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    color: var(--muted-strong);
+  }
+
+  .kcard__status-pin {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+  .kanban-col[data-status="in-flight"] .kcard__status-pin {
+    background: #f7b500;
+    box-shadow: 0 0 0 3px rgba(247, 181, 0, 0.2);
+  }
+  .kanban-col[data-status="on-deck"] .kcard__status-pin {
+    background: #6b7086;
+    box-shadow: 0 0 0 3px rgba(107, 112, 134, 0.2);
+  }
+
+  .kcard__title {
+    font-family: var(--font-display);
+    font-variation-settings: "opsz" 144, "SOFT" 20, "wght" 500;
+    font-size: 1.35rem;
+    line-height: 1.1;
+    margin: 0;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+
+  .kcard__summary {
+    margin: 0;
+    font-size: 0.87rem;
+    line-height: 1.5;
+    color: var(--text-soft);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .kcard__stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 2px;
+  }
+
+  .kcard__chip {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.04em;
+    padding: 3px 7px;
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    color: var(--muted-strong);
+    background: transparent;
+    white-space: nowrap;
+  }
+
+  .kcard__chip--more {
+    border-style: dashed;
+  }
+
+  .kcard__foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 4px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--border);
+  }
+
+  .kcard__go {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    transition: transform 0.2s ease;
+  }
+
+  .kcard:hover .kcard__go {
+    transform: translateX(3px);
+  }
+
+  .kcard__live,
+  .kcard__repo {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .kcard__live {
+    color: #16a34a;
+  }
+  .kcard__repo {
+    color: var(--muted-strong);
+  }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width: 960px) {
+    .kanban {
+      grid-template-columns: 1fr 1fr;
+    }
+    .kanban-col[data-status="on-deck"] {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .kanban {
+      grid-template-columns: 1fr;
+    }
+    .kanban-col[data-status="on-deck"] {
+      grid-column: auto;
+    }
+    .kcard:nth-child(odd),
+    .kcard:nth-child(even) {
+      transform: rotate(0deg);
+    }
+  }
+</style>

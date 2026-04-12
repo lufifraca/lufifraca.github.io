@@ -1,144 +1,252 @@
 ---
-const resumeUrl = "/cv.pdf";
----
-<link rel="stylesheet" href="/site.css" />
+import { RESUME_PRODUCT, RESUME_DESIGN } from "../consts";
 
-<header class="notch-bar" aria-label="Site navigation">
-  <div class="notch">
-    <nav class="notch-nav" aria-label="Primary navigation">
-      <a class="chip" href="/" aria-label="Home">Home</a>
-      <a class="chip" href="/projects" aria-label="Projects">Projects</a>
-      <a class="chip primary" href={resumeUrl} target="_blank" rel="noreferrer" aria-label="Resume">Resume</a>
+interface Props {
+  world?: "home" | "product" | "arcade";
+}
+
+const { world = "product" } = Astro.props;
+const isHome = world === "home";
+const isArcade = world === "arcade";
+const resumeUrl = isArcade ? RESUME_DESIGN : RESUME_PRODUCT;
+const resumeLabel = isHome ? "Resume" : isArcade ? "Design CV" : "Product CV";
+
+const contextLabel = isArcade ? "arcade" : "studio";
+---
+
+<header class="studio-header" data-world={world} aria-label="Site navigation">
+  <div class="studio-header__inner">
+    <a class="brand" href="/">
+      <span class="brand__mark" aria-hidden="true"></span>
+      <span class="brand__name">L.F.L.</span>
+      {!isHome && (
+        <>
+          <span class="brand__slash">/</span>
+          <span class="brand__context">{contextLabel}</span>
+        </>
+      )}
+    </a>
+
+    <nav class="nav" aria-label="Primary navigation">
+      <a class="nav__link" href="/">Home</a>
+      <a class="nav__link" href="/studio">Studio</a>
+      <a class="nav__link" href="/arcade">Arcade</a>
+      <a class="nav__link nav__link--cta" href={resumeUrl} target="_blank" rel="noreferrer">
+        {resumeLabel} <span aria-hidden="true">↗</span>
+      </a>
     </nav>
   </div>
 </header>
 
 <style>
-  .notch-bar {
+  .studio-header {
     position: sticky;
     top: 0;
     z-index: 60;
-    height: 78px;
-    display: grid;
-    place-items: center;
-    background: rgba(246, 244, 238, 0.92);
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
     border-bottom: 1px solid var(--border);
-    backdrop-filter: blur(20px);
+    transition: background 500ms ease, border-color 500ms ease;
   }
 
-  .notch-bar::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: 2;
-    background: rgba(255, 255, 255, 0.9);
-    pointer-events: none;
-    --notch-w: 240px;
-    --notch-h: 60px;
-    --notch-x: 50%;
-    --notch-y: 50%;
-    -webkit-mask: radial-gradient(
-      ellipse var(--notch-w) var(--notch-h) at var(--notch-x) var(--notch-y),
-      transparent 0,
-      transparent 50%,
-      black 50.1%
-    );
-    mask: radial-gradient(
-      ellipse var(--notch-w) var(--notch-h) at var(--notch-x) var(--notch-y),
-      transparent 0,
-      transparent 50%,
-      black 50.1%
-    );
-  }
-
-  .notch {
-    position: relative;
-    z-index: 3;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 10px 18px;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.8);
-    border: 1px solid rgba(15, 23, 42, 0.08);
-    box-shadow: 0 24px 50px rgba(15, 23, 42, 0.14);
-  }
-
-  .notch::before,
-  .notch::after {
-    content: "";
-    position: absolute;
-    top: 12px;
-    width: 18px;
-    height: 18px;
-    border-radius: 999px;
-    border: 1px solid rgba(15, 23, 42, 0.08);
-    background: rgba(255, 255, 255, 0.8);
-    filter: blur(0.2px);
-  }
-
-  .notch::before {
-    left: -10px;
-  }
-
-  .notch::after {
-    right: -10px;
-  }
-
-  .notch-nav {
+  .studio-header__inner {
+    max-width: 1220px;
+    margin: 0 auto;
+    padding: 16px 28px;
     display: flex;
-    gap: 12px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
   }
 
-  .chip {
+  /* BRAND */
+  .brand {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    padding: 10px 20px;
-    border-radius: 10px;
-    border: 1px solid var(--border-strong, rgba(15, 23, 42, 0.2));
-    background: rgba(255, 255, 255, 0.92);
+    gap: 10px;
     color: var(--text);
-    text-decoration: none;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .brand__mark {
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+    background: var(--accent);
+    box-shadow: 3px 3px 0 0 var(--ink);
+    transition: transform 0.3s ease;
+  }
+
+  .brand:hover .brand__mark {
+    transform: rotate(-10deg) scale(1.1);
+  }
+
+  .brand__name {
     font-weight: 600;
-    font-size: 0.85rem;
+  }
+
+  .brand__slash {
+    color: var(--muted);
+    opacity: 0.5;
+  }
+
+  .brand__context {
+    color: var(--muted-strong);
+  }
+
+  [data-world="arcade"] .brand__context {
+    color: var(--accent);
+    text-shadow: 0 0 8px rgba(0, 255, 209, 0.5);
+  }
+
+  /* NAV */
+  .nav {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .nav__link {
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: 0.82rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    transition: transform 0.15s ease, border-color 0.18s ease, color 0.18s ease, background 0.18s ease;
+    color: var(--text-soft);
+    padding: 10px 14px;
+    border-radius: 8px;
+    transition: color 0.2s ease, background 0.2s ease;
   }
 
-  .chip:hover {
-    border-color: var(--accent);
-    color: var(--accent);
-    transform: translateY(-1px);
+  .nav__link:hover {
+    color: var(--text);
+    background: color-mix(in srgb, var(--ink) 6%, transparent);
   }
 
-  .chip.primary {
+  .nav__link--cta {
+    color: var(--text);
+    border: 1.5px solid var(--ink);
+    margin-left: 8px;
+    transition:
+      transform 0.18s ease,
+      box-shadow 0.18s ease,
+      background 0.2s ease,
+      color 0.2s ease;
+  }
+
+  .nav__link--cta:hover {
     background: var(--accent);
     color: #fff;
-    border-color: var(--accent);
-    box-shadow: 0 14px 34px rgba(46, 92, 255, 0.3);
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0 0 var(--ink);
   }
 
-  .chip.primary:hover {
-    background: var(--accent-2);
-    color: #fff;
+  [data-world="arcade"] .nav__link--cta:hover {
+    color: #070814;
   }
 
-  @media (max-width: 520px) {
-    .notch {
-      padding: 8px 12px;
+  @media (max-width: 680px) {
+    .studio-header__inner {
+      padding: 12px 18px;
+      gap: 10px;
     }
-
-    .chip {
-      padding: 8px 12px;
-      font-size: 0.75rem;
-      letter-spacing: 0.06em;
+    .brand__slash,
+    .brand__context {
+      display: none;
     }
+    .nav {
+      gap: 2px;
+    }
+    .nav__link {
+      padding: 8px 10px;
+      font-size: 0.72rem;
+      letter-spacing: 0.04em;
+    }
+    .nav__link--cta {
+      margin-left: 4px;
+    }
+  }
 
-    .notch::before,
-    .notch::after {
+  @media (max-width: 440px) {
+    .studio-header__inner {
+      padding: 10px 14px;
+      gap: 8px;
+    }
+    .nav {
+      gap: 0;
+    }
+    .nav__link {
+      padding: 6px 7px;
+      font-size: 0.66rem;
+      letter-spacing: 0.02em;
+    }
+    .nav__link--cta {
+      padding: 7px 9px;
+      margin-left: 2px;
+    }
+    /* Home is redundant at this width — brand mark already links home */
+    .nav__link[href="/"] {
       display: none;
     }
   }
 </style>
+
+<script>
+  // ------------------------------------------------------------------
+  // World-swap transition handler.
+  // When the user clicks a rift portal ([data-rift]) or navigates
+  // between / and /arcade, we flag the incoming document so the
+  // CSS ::view-transition-new(root) keyframes in site.css fire
+  // a circle-reveal from the click point.
+  // ------------------------------------------------------------------
+  let lastRiftClick: { x: number; y: number } | null = null;
+
+  document.addEventListener(
+    "click",
+    (e) => {
+      const target = e.target as HTMLElement | null;
+      const rift = target?.closest("[data-rift]");
+      if (rift) {
+        lastRiftClick = { x: e.clientX, y: e.clientY };
+      }
+    },
+    true
+  );
+
+  document.addEventListener("astro:before-swap", (ev) => {
+    // @ts-expect-error - Astro's TransitionBeforeSwapEvent
+    const e = ev as { from: URL; to: URL; newDocument: Document };
+    const fromPath = e.from.pathname;
+    const toPath = e.to.pathname;
+    // Fire the rift-open animation whenever the user crosses the arcade
+    // boundary — any product-world page ⇄ /arcade.
+    const isWorldSwap = (fromPath === "/arcade") !== (toPath === "/arcade");
+
+    // Always clear first so stale state never leaks into a non-swap nav
+    delete e.newDocument.documentElement.dataset.worldSwap;
+    e.newDocument.documentElement.style.removeProperty("--rift-x");
+    e.newDocument.documentElement.style.removeProperty("--rift-y");
+
+    if (isWorldSwap) {
+      e.newDocument.documentElement.dataset.worldSwap = "true";
+
+      // Use the recorded rift-click coords if we have them; otherwise fall
+      // back to the bottom-right corner (which is where both rifts live).
+      const click =
+        lastRiftClick ?? {
+          x: window.innerWidth * 0.88,
+          y: window.innerHeight * 0.86,
+        };
+      const xp = (click.x / window.innerWidth) * 100;
+      const yp = (click.y / window.innerHeight) * 100;
+      e.newDocument.documentElement.style.setProperty("--rift-x", `${xp}%`);
+      e.newDocument.documentElement.style.setProperty("--rift-y", `${yp}%`);
+      lastRiftClick = null;
+    }
+  });
+</script>
+
