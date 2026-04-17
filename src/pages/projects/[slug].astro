@@ -1,5 +1,6 @@
 ---
 import Header from "../../components/Header.astro";
+import { ClientRouter } from "astro:transitions";
 import { getCollection, render } from "astro:content";
 
 export async function getStaticPaths() {
@@ -19,6 +20,7 @@ const backLabel = isGame ? "← Back to Arcade" : "← Back to Studio";
     <title>{project.data.title} • Luca Ficano Latimer</title>
     <meta name="description" content={project.data.summary} />
     <link rel="stylesheet" href="/site.css">
+    <ClientRouter />
     <style>
       .demo-section {
         margin: 32px 0;
