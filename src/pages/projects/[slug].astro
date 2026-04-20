@@ -22,26 +22,34 @@ const backLabel = isGame ? "← Back to Arcade" : "← Back to Studio";
     <link rel="stylesheet" href="/site.css">
     <ClientRouter />
     <style>
+      /* Hero video — full-bleed dark band */
+      .demo-hero {
+        width: 100vw;
+        margin-left: calc(50% - 50vw);
+        background: #0d111f;
+        padding: 32px 0;
+        margin-top: 24px;
+        margin-bottom: 32px;
+      }
+      .demo-hero__inner {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 0 28px;
+      }
+      .demo-hero video {
+        display: block;
+        width: 100%;
+        border-radius: 12px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      }
+
+      /* Inline demo (iframe fallback) */
       .demo-section {
         margin: 32px 0;
       }
       .demo-section h2 {
         font-size: 1.5rem;
         margin-bottom: 16px;
-      }
-      .demo-video-wrap {
-        position: relative;
-        width: 100%;
-        border-radius: 18px;
-        overflow: hidden;
-        border: 1px solid var(--border);
-        background: #000;
-        box-shadow: var(--shadow);
-      }
-      .demo-video-wrap video {
-        display: block;
-        width: 100%;
-        border-radius: 18px;
       }
       .demo-iframe-wrap {
         position: relative;
@@ -101,14 +109,18 @@ const backLabel = isGame ? "← Back to Arcade" : "← Back to Studio";
       }
 
       @media (max-width: 640px) {
-        .demo-section h2 {
-          font-size: 1.25rem;
+        .demo-hero {
+          padding: 20px 0;
+          margin-top: 16px;
+          margin-bottom: 24px;
         }
-        .demo-video-wrap,
+        .demo-hero__inner {
+          padding: 0 16px;
+        }
+        .demo-hero video {
+          border-radius: 8px;
+        }
         .demo-iframe-wrap {
-          border-radius: 14px;
-        }
-        .demo-video-wrap video {
           border-radius: 14px;
         }
         article table {
@@ -125,21 +137,22 @@ const backLabel = isGame ? "← Back to Arcade" : "← Back to Studio";
       <div class="kicker" style="margin-bottom:10px;">
         {project.data.year}{project.data.stack?.length ? ` • ${project.data.stack.join(", ")}` : ""}
       </div>
+
+      {project.data.video ? (
+        <section class="demo-hero">
+          <div class="demo-hero__inner">
+            <video controls preload="metadata" playsinline>
+              <source src={project.data.video} type="video/mp4" />
+            </video>
+          </div>
+        </section>
+      ) : null}
+
       <article style="line-height:1.65">
         <Content />
       </article>
 
-      {project.data.video ? (
-        <section class="demo-section">
-          <h2>Demo</h2>
-          <div class="demo-video-wrap">
-            <video controls preload="metadata" playsinline>
-              <source src={project.data.video} type="video/mp4" />
-              Your browser does not support the video element.
-            </video>
-          </div>
-        </section>
-      ) : project.data.demo ? (
+      {project.data.demo ? (
         <section class="demo-section">
           <h2>Live Demo</h2>
           <div class="demo-iframe-wrap">

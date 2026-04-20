@@ -220,8 +220,10 @@ const contextLabel = isArcade ? "arcade" : "studio";
   document.addEventListener("astro:before-swap", (ev) => {
     // @ts-expect-error - Astro's TransitionBeforeSwapEvent
     const e = ev as { from: URL; to: URL; newDocument: Document };
-    const fromPath = e.from.pathname;
-    const toPath = e.to.pathname;
+    // Normalize trailing slashes so the check works on both dev and prod
+    const strip = (p: string) => p.replace(/\/$/, "") || "/";
+    const fromPath = strip(e.from.pathname);
+    const toPath = strip(e.to.pathname);
     // Fire the rift-open animation whenever the user crosses the arcade
     // boundary — any product-world page ⇄ /arcade.
     const isWorldSwap = (fromPath === "/arcade") !== (toPath === "/arcade");
