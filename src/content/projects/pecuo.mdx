@@ -1,0 +1,65 @@
+---
+title: "Pecuo"
+slug: "pecuo"
+year: 2026
+kind: "product"
+status: "in-flight"
+stack: ["Next.js 15", "TypeScript", "React 19", "Postgres (Neon)", "Drizzle ORM", "Plaid", "Claude Haiku 4.5", "Tailwind CSS", "Vercel"]
+summary: "A personal tax-and-finance app for people with mixed income (W-2, 1099, 529, investments, HSA/FSA). It connects your accounts and, for every transaction, proposes how the money should be treated for taxes — then leaves the final call to you."
+tagline: "AI tax decision-support for mixed-income earners — not tax advice."
+live: "https://pecuo.vercel.app"
+order: 2
+# Demo video placeholder — drop a capture at /public/videos/pecuo-demo.mp4
+# and uncomment the line below to swap the placeholder band for the real video:
+# video: "/videos/pecuo-demo.mp4"
+---
+
+## Overview
+Pecuo is a personal tax-and-finance app for people whose income doesn't fit one box — a mix of W-2 salary, 1099/freelance income, a 529 college-savings plan, brokerage/retirement investments, and pre-tax benefits (HSA/FSA). It connects your financial accounts and, for every transaction, proposes how that money should be treated for taxes — then leaves the final call to you. Its tagline is its guardrail: **"decision support, not tax advice."**
+
+## The Problem
+People with mixed income face tax decisions that normal budgeting apps ignore: Is this laptop a business write-off, a 529-eligible education cost, or both? Did I reimburse myself from the 529 in time? Am I over my HSA contribution cap? What's my safe-harbor estimated-tax payment? Pecuo pulls it into one place, sorts the mess with AI, surfaces deadlines, and keeps an audit-ready record of every decision and its reasoning — without pretending to be your CPA.
+
+## What It Does
+- **Connects accounts via Plaid** — checking, savings, credit, loans/mortgages, brokerage, 401k/IRA, HSA, 529 — syncing balances, transactions, and investment holdings.
+- **Proposes a "tax home" per transaction with AI** — 529-eligible, 1099 business, HSA/medical, charitable, deductible interest, personal, or "needs a label" — each with a plain-language rationale and confidence. The human confirms; it never auto-decides.
+- **Flags judgment calls** (mixed-use expenses) to a worksheet that explains why it's a judgment call and what each treatment means — with no recommendation and no pre-selected answer, by design.
+- **Tracks 529 reimbursements**, education-credit-vs-529 allocation, and contribution/limit meters.
+- **Surfaces deadlines** — estimated-tax dates, 529 reimbursement windows, year-end sweeps.
+- **Stores receipts privately**, attached to the transaction and decision.
+- **Keeps an append-only decision vault** — an immutable audit trail, attributed to the user, citing the rule referenced.
+
+## The Constitution (Design Principles)
+These are non-negotiable, and several are enforced by the database itself rather than by app code:
+
+- **Deterministic math; AI only sorts & explains.** A language model never computes or recalls a tax figure — every number traces to a record in a versioned, CPA-verifiable rules table. The LLM may only classify, explain, or propose a grouping for confirmation.
+- **Decision support, not advice — human-in-the-loop.** Murky/judgment cases are flagged and deferred with no recommendation.
+- **Append-only audit trail** — decision records are immutable (`UPDATE`/`DELETE` revoked at the DB).
+- **Per-user isolation enforced by the database** via Postgres Row-Level Security.
+- **Exact money** — integer minor units in `bigint`, no floating point.
+
+## What I Built
+- A **constitutional architecture** where the LLM classifies and explains but is *structurally prevented* from producing tax figures — every number is deterministic and auditable.
+- **Multi-tenant isolation at the database layer** — a `withOwner()` wrapper drops to a restricted `app_user` role and sets `app.user_id`, so Postgres RLS enforces tenant isolation; append-only tables have `UPDATE`/`DELETE` revoked.
+- **Provider-agnostic integration layers** (storage, LLM, bank data), each with an offline/no-key fallback.
+- An **LLM-output cache** so suggestions and explanations compute once — page loads make zero model calls.
+- **Exact integer-minor-unit money end to end**, with full Plaid ingestion across every account type (including valuing investments from holdings) and correct asset/liability net-worth treatment.
+- **Pure, unit-tested finance logic** (net worth, meters, deadlines, estimated tax, education-split, reimbursement) and a **versioned rules table** with a draft → provisional → CPA-verified review lifecycle.
+
+## Tech Architecture
+| Layer | Stack |
+|-------|-------|
+| Frontend | Next.js 15 (App Router), React 19, TypeScript — Server Components, Server Actions |
+| Backend | Serverless on Vercel (Route Handlers — no separate backend) |
+| Database | Postgres (Neon) + Drizzle ORM + postgres.js |
+| Isolation | Postgres Row-Level Security via `withOwner()` + restricted role; append-only tables |
+| AI | Anthropic Claude (Haiku 4.5) — forced tool-call structured output; classifies & explains, never computes |
+| Bank data | Plaid (Sandbox) — accounts, transactions, holdings |
+| Storage | Vercel Blob — RLS-gated receipt downloads |
+| Auth | JWT session cookies (jose) + bcrypt |
+| Tests | Vitest (107 — unit + DB integration), gated by typecheck + lint + test |
+| Design | Tailwind v4 + custom inline-style system (Hanken Grotesk + DM Serif Display) |
+| Process | Spec-driven (GitHub Spec Kit), Drizzle migrations, GitHub Actions CI, Vercel deploy |
+
+## Current Status
+A **deployed, showable prototype** on Plaid Sandbox with realistic test data. Rules content is draft/unverified, so it demonstrates the full experience but is **not for real filing yet**.

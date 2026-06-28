@@ -1,6 +1,7 @@
 ---
 import Header from "../components/Header.astro";
 import Rift from "../components/Rift.astro";
+import SandboxFeature from "../components/SandboxFeature.astro";
 import MilanFeature from "../components/MilanFeature.astro";
 import { SITE_TITLE, SITE_DESCRIPTION, RESUME_SWE } from "../consts";
 import { ClientRouter } from "astro:transitions";
@@ -388,14 +389,15 @@ import { ClientRouter } from "astro:transitions";
 
           <p class="hero-tagline">
             <strong>CS grad, product builder, and game designer.</strong>
-            Two summers at 505 Games on <em>Among the Trolls</em>, a handful of
-            shipped products, and a growing library of prototypes — currently hunting
-            product, solutions, and game-design roles in the SF Bay Area or LA.
+            Currently a <em>Forward Deployed Engineer (contract)</em> at The Sandbox,
+            after two summers at 505 Games on <em>Among the Trolls</em> — plus a
+            growing library of shipped products and prototypes.
           </p>
 
           <div class="hero-ctas">
-            <a class="btn primary" href="#milan">Milan · 505 Games →</a>
-            <a class="btn ghost" href="#portals">Apps/Games</a>
+            <a class="btn primary" href="#sandbox">The Sandbox · now →</a>
+            <a class="btn ghost" href="#milan">Milan · 505 Games</a>
+            <a class="btn ghost" href="#portals">Apps / Games</a>
           </div>
         </div>
 
@@ -420,8 +422,13 @@ import { ClientRouter } from "astro:transitions";
           </h2>
           <p>
             I'm a <strong>computer science graduate from Cal Poly Pomona (Dec 2025)</strong>
-            working at the intersection of game design and technical product. Most recently
-            I spent two summers at <strong>505 Games / Avantgarden</strong> in Milan building
+            working at the intersection of game design and technical product. Right now I'm a
+            <strong>Forward Deployed Engineer (contract)</strong> on the Creator Platform team at
+            <strong>The Sandbox</strong> — the primary technical point of contact for high-profile
+            game creators integrating with the engine, <em>APIs, and SDKs</em>.
+          </p>
+          <p>
+            Before that, two summers at <strong>505 Games / Avantgarden</strong> in Milan building
             systems for <em>Among the Trolls</em> — prototyping building and magic mechanics,
             owning the Narrative plugin for quests and dialogue, and shipping content
             toward early-access.
@@ -439,6 +446,9 @@ import { ClientRouter } from "astro:transitions";
           </p>
         </div>
       </section>
+
+      <!-- ============== THE SANDBOX (CURRENT ROLE) ============== -->
+      <SandboxFeature />
 
       <!-- ============== MILAN CINEMATIC ============== -->
       <MilanFeature />

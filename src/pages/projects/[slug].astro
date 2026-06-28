@@ -43,6 +43,41 @@ const backLabel = isGame ? "← Back to Arcade" : "← Back to Studio";
         box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
       }
 
+      /* Placeholder shown when a project has no demo video yet */
+      .demo-placeholder {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        border: 1.5px dashed rgba(255, 255, 255, 0.18);
+        border-radius: 12px;
+        background:
+          repeating-linear-gradient(
+            45deg,
+            rgba(255, 255, 255, 0.03) 0 10px,
+            rgba(255, 255, 255, 0.01) 10px 20px
+          );
+      }
+      .demo-placeholder__play {
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 14px 0 14px 24px;
+        border-color: transparent transparent transparent rgba(255, 255, 255, 0.35);
+        margin-left: 6px;
+        filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.12));
+      }
+      .demo-placeholder__label {
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.45);
+      }
+
       /* Inline demo (iframe fallback) */
       .demo-section {
         margin: 32px 0;
@@ -146,7 +181,16 @@ const backLabel = isGame ? "← Back to Arcade" : "← Back to Studio";
             </video>
           </div>
         </section>
-      ) : null}
+      ) : (
+        <section class="demo-hero demo-hero--empty" aria-label="Demo video coming soon">
+          <div class="demo-hero__inner">
+            <div class="demo-placeholder">
+              <span class="demo-placeholder__play" aria-hidden="true"></span>
+              <span class="demo-placeholder__label">// demo capture coming soon</span>
+            </div>
+          </div>
+        </section>
+      )}
 
       <article style="line-height:1.65">
         <Content />
