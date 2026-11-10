@@ -10,7 +10,6 @@
 
 interface Stop {
   id: string;
-  level: string;
   name: string;
   when: string;
   status: string;
@@ -30,7 +29,6 @@ const stops: Stop[] = [
     id: "milan-24",
     logo: "/images/logos/505-games.png",
     theme: "games505",
-    level: "LV 01",
     name: "505 Games",
     when: "Summer 2024",
     status: "✓ complete",
@@ -49,7 +47,6 @@ const stops: Stop[] = [
     id: "milan-25",
     logo: "/images/logos/505-games.png",
     theme: "games505",
-    level: "LV 02",
     name: "505 Games",
     when: "Summer 2025",
     status: "✓ complete",
@@ -68,7 +65,6 @@ const stops: Stop[] = [
     id: "sandbox",
     logo: "/images/logos/the-sandbox.png",
     theme: "sandbox",
-    level: "LV 03",
     name: "The Sandbox",
     when: "2026 · contract",
     status: "✓ complete",
@@ -87,7 +83,6 @@ const stops: Stop[] = [
     id: "archil",
     logo: "/images/logos/archil.png",
     theme: "archil",
-    level: "LV 04",
     name: "Archil",
     when: "2026 — now",
     status: "● in progress",
@@ -105,7 +100,7 @@ const current = stops[stops.length - 1].id;
 <section class="log" id="path" aria-labelledby="log-heading">
   <header class="log__head">
     <div>
-      <p class="log__kicker">Quest log</p>
+      <p class="log__kicker">Experience</p>
       <h2 id="log-heading">How I got <em>here.</em></h2>
     </div>
     <p class="log__lede">
@@ -129,7 +124,6 @@ const current = stops[stops.length - 1].id;
       {stops.map((s) => (
         <label class="stop" for={`q-${s.id}`} data-current={s.id === current ? "true" : undefined}>
           <img class="stop__node" src={s.logo} alt="" width="36" height="36" />
-          <span class="stop__level">{s.level}</span>
           <span class="stop__name">{s.name}</span>
           <span class="stop__when">{s.when}</span>
         </label>
@@ -143,7 +137,7 @@ const current = stops[stops.length - 1].id;
             <header class="panel__meta">
               <img class="panel__logo" src={s.logo} alt={`${s.name} logo`} width="44" height="44" />
               <span class="panel__status">{s.status}</span>
-              <span>{s.level} · {s.when}</span>
+              <span>{s.when}</span>
             </header>
             <h3 class="panel__title">
               {s.title} <span>at</span> <em>{s.name}.</em>
@@ -282,12 +276,6 @@ const current = stops[stops.length - 1].id;
     opacity: 1;
   }
 
-  .stop__level {
-    font-family: var(--font-mono);
-    font-size: 0.66rem;
-    letter-spacing: 0.18em;
-    color: var(--muted);
-  }
 
   .stop__name {
     font-family: var(--font-display);
@@ -556,10 +544,6 @@ const current = stops[stops.length - 1].id;
     .stop__when {
       font-size: 0.56rem;
       letter-spacing: 0.04em;
-    }
-    .stop__level {
-      font-size: 0.56rem;
-      letter-spacing: 0.1em;
     }
   }
 </style>

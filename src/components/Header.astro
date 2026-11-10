@@ -1,5 +1,4 @@
 ---
-import { RESUME_PRODUCT } from "../consts";
 
 interface Props {
   world?: "home" | "product" | "arcade";
@@ -8,10 +7,8 @@ interface Props {
 const { world = "product" } = Astro.props;
 const isHome = world === "home";
 const isArcade = world === "arcade";
-const resumeUrl = RESUME_PRODUCT;
-const resumeLabel = "Resume";
 
-const contextLabel = isArcade ? "side quests" : "work";
+const contextLabel = isArcade ? "side quests" : "experience";
 ---
 
 <header class="studio-header" data-world={world} aria-label="Site navigation">
@@ -35,11 +32,8 @@ const contextLabel = isArcade ? "side quests" : "work";
     </a>
 
     <nav class="nav" aria-label="Primary navigation">
-      <a class="nav__link" href="/">Home</a>
+      <a class="nav__link" href="/">Experience</a>
       <a class="nav__link" href="/side-quests">Side Quests</a>
-      <a class="nav__link nav__link--cta" href={resumeUrl} target="_blank" rel="noreferrer">
-        {resumeLabel} <span aria-hidden="true">↗</span>
-      </a>
     </nav>
   </div>
 </header>
@@ -131,28 +125,6 @@ const contextLabel = isArcade ? "side quests" : "work";
     background: color-mix(in srgb, var(--ink) 6%, transparent);
   }
 
-  .nav__link--cta {
-    color: var(--text);
-    border: 1.5px solid var(--ink);
-    margin-left: 8px;
-    transition:
-      transform 0.18s ease,
-      box-shadow 0.18s ease,
-      background 0.2s ease,
-      color 0.2s ease;
-  }
-
-  .nav__link--cta:hover {
-    background: var(--accent);
-    color: #fff;
-    transform: translate(-2px, -2px);
-    box-shadow: 4px 4px 0 0 var(--ink);
-  }
-
-  [data-world="arcade"] .nav__link--cta:hover {
-    color: #070814;
-  }
-
   @media (max-width: 680px) {
     .studio-header__inner {
       padding: 12px 18px;
@@ -170,9 +142,6 @@ const contextLabel = isArcade ? "side quests" : "work";
       font-size: 0.72rem;
       letter-spacing: 0.04em;
     }
-    .nav__link--cta {
-      margin-left: 4px;
-    }
   }
 
   @media (max-width: 440px) {
@@ -187,14 +156,6 @@ const contextLabel = isArcade ? "side quests" : "work";
       padding: 6px 7px;
       font-size: 0.66rem;
       letter-spacing: 0.02em;
-    }
-    .nav__link--cta {
-      padding: 7px 9px;
-      margin-left: 2px;
-    }
-    /* Home is redundant at this width — brand mark already links home */
-    .nav__link[href="/"] {
-      display: none;
     }
   }
 </style>
