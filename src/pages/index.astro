@@ -68,9 +68,8 @@ const gameCount = projects.filter((p) => p.data.kind === "game").length;
 
       .hero h1 {
         font-family: var(--font-display);
-        font-variation-settings: "opsz" 144, "SOFT" 40, "wght" 500;
-        font-size: clamp(3.4rem, 11vw, 10rem);
-        line-height: 0.88;
+        font-size: clamp(3.2rem, 9.5vw, 8.5rem);
+        line-height: 0.9;
         letter-spacing: -0.04em;
         margin: 0 0 clamp(18px, 3vw, 32px);
         color: var(--text);
@@ -79,8 +78,6 @@ const gameCount = projects.filter((p) => p.data.kind === "game").length;
       .hero h1 .line { display: block; }
 
       .hero h1 .accent {
-        font-style: italic;
-        font-variation-settings: "opsz" 144, "SOFT" 80, "wght" 500;
         color: var(--accent);
         padding-right: 0.1em;
       }
@@ -145,7 +142,7 @@ const gameCount = projects.filter((p) => p.data.kind === "game").length;
         transform: translateX(-50%) rotate(-2deg);
         width: 120px;
         height: 28px;
-        background: rgba(255, 220, 120, 0.85);
+        background: rgba(0, 255, 209, 0.6);
         border: 1px solid rgba(0, 0, 0, 0.08);
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
         z-index: 2;
@@ -181,7 +178,7 @@ const gameCount = projects.filter((p) => p.data.kind === "game").length;
 
       .cartridge::before {
         content: "";
-        background: #ff7a3d;
+        background: var(--highlight);
         border: 1px solid var(--ink);
         border-radius: 2px;
       }
@@ -217,7 +214,6 @@ const gameCount = projects.filter((p) => p.data.kind === "game").length;
 
       .portal h2 {
         font-family: var(--font-display);
-        font-variation-settings: "opsz" 144, "SOFT" 30, "wght" 500;
         font-size: clamp(2.2rem, 6vw, 4rem);
         line-height: 1;
         letter-spacing: -0.03em;
@@ -225,7 +221,6 @@ const gameCount = projects.filter((p) => p.data.kind === "game").length;
       }
 
       .portal h2 em {
-        font-style: italic;
         color: var(--accent);
       }
 
@@ -285,7 +280,7 @@ const gameCount = projects.filter((p) => p.data.kind === "game").length;
 
       @media (max-width: 520px) {
         .hero h1 {
-          font-size: clamp(3rem, 16vw, 5rem);
+          font-size: clamp(2.8rem, 15vw, 4.6rem);
         }
         .cartridge {
           left: -8px;

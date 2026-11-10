@@ -5,29 +5,30 @@
    The html element carries data-world, which flips the CSS variables below.
    ========================================================================== */
 
-@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,900&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap");
 
 /* ---------- PRODUCT WORLD (default, light, editorial) ---------- */
 :root,
 [data-world="product"] {
-  /* Surfaces */
-  --bg: #f4f1ea;
-  --bg-soft: #fbf8f2;
-  --bg-deep: #eae4d7;
+  /* Surfaces — cool paper, so the navy and cyan of the dark world carry over */
+  --bg: #f1f4f8;
+  --bg-soft: #f8fafc;
+  --bg-deep: #e3e8f0;
   --card: #ffffff;
-  --card-ink: #0d111f;
+  --card-ink: #0a0c1a;
 
-  /* Text */
-  --text: #0d111f;
-  --text-soft: #1f2333;
-  --muted: #6b7086;
-  --muted-strong: #3e4256;
+  /* Text — the ink is the dark world's background navy */
+  --text: #0a0c1a;
+  --text-soft: #1d2236;
+  --muted: #646b85;
+  --muted-strong: #3a4059;
 
-  /* Accents */
-  --accent: #ff5733; /* warm coral — editorial, confident, playful */
-  --accent-2: #e63e1a;
-  --accent-soft: #ffe9e2;
-  --ink: #0d111f;
+  /* Accents — electric blue, with the arcade cyan as a highlight */
+  --accent: #1f4fff;
+  --accent-2: #1438c7;
+  --accent-soft: #e2e9ff;
+  --highlight: #00ffd1;
+  --ink: #0a0c1a;
 
   /* Structure */
   --border: rgba(15, 23, 42, 0.12);
@@ -37,14 +38,14 @@
   --shadow-hard: 8px 8px 0 0 var(--ink);
 
   /* Type */
-  --font-display: "Fraunces", "Times New Roman", Georgia, serif;
+  --font-display: "Archivo", "Space Grotesk", "Helvetica Neue", Arial, sans-serif;
   --font-body: "Space Grotesk", Inter, "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
   /* Background art */
   --page-bg:
-    radial-gradient(1200px 820px at 85% -10%, rgba(255, 87, 51, 0.10), transparent 60%),
-    radial-gradient(1100px 640px at -10% 0%, rgba(13, 22, 50, 0.06), transparent 60%),
+    radial-gradient(1200px 820px at 85% -10%, rgba(31, 79, 255, 0.10), transparent 60%),
+    radial-gradient(1100px 640px at -10% 0%, rgba(0, 255, 209, 0.10), transparent 60%),
     var(--bg);
 }
 
@@ -62,6 +63,7 @@
   --muted-strong: #a5accd;
 
   --accent: #00ffd1; /* phosphor cyan */
+  --highlight: #ff2ea6;
   --accent-2: #00c9a7;
   --accent-soft: rgba(0, 255, 209, 0.14);
   --ink: #f4f5ff;
@@ -158,11 +160,18 @@ h2,
 h3,
 h4 {
   font-family: var(--font-display);
-  font-weight: 500;
-  font-variation-settings: "opsz" 144, "SOFT" 30;
+  font-weight: 800;
   color: var(--text);
   line-height: 1.02;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
+}
+
+/* Emphasis inside headings is carried by color, not by italics. */
+h1 em,
+h2 em,
+h3 em,
+h4 em {
+  font-style: normal;
 }
 
 h1 {
@@ -203,8 +212,7 @@ p {
 
 .display {
   font-family: var(--font-display);
-  font-weight: 500;
-  font-variation-settings: "opsz" 144, "SOFT" 50;
+  font-weight: 800;
   letter-spacing: -0.035em;
   line-height: 0.92;
 }
