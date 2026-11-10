@@ -94,7 +94,7 @@ const current = stops[stops.length - 1].id;
 <section class="log" id="path" aria-labelledby="log-heading">
   <header class="log__head">
     <div>
-      <p class="log__kicker">// quest log</p>
+      <p class="log__kicker">Quest log</p>
       <h2 id="log-heading">How I got <em>here.</em></h2>
     </div>
     <p class="log__lede">
@@ -183,9 +183,10 @@ const current = stops[stops.length - 1].id;
   }
 
   .log__kicker {
-    font-family: var(--font-mono);
+    font-family: var(--font-body);
+        font-weight: 600;
     font-size: 0.72rem;
-    letter-spacing: 0.22em;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--muted-strong);
     margin: 0 0 12px;

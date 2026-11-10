@@ -60,9 +60,10 @@ import { ClientRouter } from "astro:transitions";
       }
 
       .arcade-mark {
-        font-family: var(--font-mono);
+        font-family: var(--font-body);
+        font-weight: 600;
         font-size: 0.7rem;
-        letter-spacing: 0.28em;
+        letter-spacing: 0.14em;
         text-transform: uppercase;
         color: var(--accent);
         text-shadow: 0 0 12px rgba(0, 255, 209, 0.4);
@@ -125,9 +126,10 @@ import { ClientRouter } from "astro:transitions";
       }
 
       .board__mark {
-        font-family: var(--font-mono);
+        font-family: var(--font-body);
+        font-weight: 600;
         font-size: 0.7rem;
-        letter-spacing: 0.28em;
+        letter-spacing: 0.14em;
         text-transform: uppercase;
         color: var(--accent);
       }
@@ -200,7 +202,7 @@ import { ClientRouter } from "astro:transitions";
             variant="home"
             href="/"
             label="day job."
-            caption="// back to work"
+            caption="back to work"
             riftKey="home"
             ariaLabel="Step back through the portal to the home page"
           />
@@ -209,7 +211,7 @@ import { ClientRouter } from "astro:transitions";
 
       <section class="board" id="products" aria-labelledby="board-heading">
         <header class="board__head">
-          <span class="board__mark">// THE BOARD</span>
+          <span class="board__mark">THE BOARD</span>
           <h2 id="board-heading">Products, <em>shipped.</em></h2>
           <p>What's live, what's in flight, and what's on deck.</p>
         </header>

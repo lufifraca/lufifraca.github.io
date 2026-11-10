@@ -39,9 +39,10 @@ const gameCount = projects.filter((p) => p.data.kind === "game").length;
       }
 
       .hero-mark {
-        font-family: var(--font-mono);
+        font-family: var(--font-body);
+        font-weight: 600;
         font-size: 0.72rem;
-        letter-spacing: 0.22em;
+        letter-spacing: 0.14em;
         text-transform: uppercase;
         color: var(--muted-strong);
         display: flex;
@@ -204,9 +205,10 @@ const gameCount = projects.filter((p) => p.data.kind === "game").length;
       }
 
       .portal__kicker {
-        font-family: var(--font-mono);
+        font-family: var(--font-body);
+        font-weight: 600;
         font-size: 0.72rem;
-        letter-spacing: 0.22em;
+        letter-spacing: 0.14em;
         text-transform: uppercase;
         color: var(--muted-strong);
         margin: 0 0 12px;
@@ -297,7 +299,7 @@ const gameCount = projects.filter((p) => p.data.kind === "game").length;
       <section class="hero">
         <div class="hero-copy">
           <div class="hero-mark">
-            <span>// main quest · developer relations @ archil</span>
+            <span>Main quest · Developer Relations at Archil</span>
           </div>
           <h1>
             <span class="line"><span class="accent">Luca</span></span>
@@ -321,7 +323,6 @@ const gameCount = projects.filter((p) => p.data.kind === "game").length;
           <div class="hero-photo-frame">
             <img src="/images/luca-hero.jpg" alt="Photo of Luca Ficano Latimer" />
           </div>
-          <div class="hero-photo-caption" aria-hidden="true">// luca.jpg</div>
           <div class="cartridge" aria-hidden="true">
             <div class="cartridge-label">DEVREL</div>
           </div>
@@ -334,7 +335,7 @@ const gameCount = projects.filter((p) => p.data.kind === "game").length;
       <!-- ============== ONE PORTAL: day job → side quests ============== -->
       <section class="portal" id="side-quests" aria-labelledby="portal-heading">
         <div class="portal__copy">
-          <p class="portal__kicker">// off the clock</p>
+          <p class="portal__kicker">Off the clock</p>
           <h2 id="portal-heading">
             Then there are the <em>side quests.</em>
           </h2>
@@ -352,7 +353,7 @@ const gameCount = projects.filter((p) => p.data.kind === "game").length;
             variant="arcade"
             href="/side-quests"
             label="side quests."
-            caption="// step through"
+            caption="step through"
             riftKey="side-quests"
             ariaLabel="Step through the portal to the side quests"
           />

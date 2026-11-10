@@ -10,20 +10,99 @@ export async function getStaticPaths() {
 }
 const { project } = Astro.props;
 const { Content } = await render(project);
-const isGame = project.data.kind === "game";
+const d = project.data;
+const isGame = d.kind === "game";
 // Every project is a side quest now, so they all live in the dark world.
 const world = "arcade";
 const backHref = isGame ? "/side-quests#levels" : "/side-quests#products";
-const backLabel = "← Back to side quests";
+
+const statusLabel = { shipped: "Shipped", "in-flight": "In flight", "on-deck": "On deck" }[d.status];
+const facts = [isGame ? "Game" : "Product", String(d.year), isGame ? null : statusLabel].filter(Boolean);
 ---
 <html lang="en" data-world={world}>
   <head>
     <meta charset="utf-8" />
-    <title>{project.data.title} • Luca Ficano Latimer</title>
-    <meta name="description" content={project.data.summary} />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>{d.title} • Luca Ficano Latimer</title>
+    <meta name="description" content={d.summary} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="stylesheet" href={CSS_HREF} />
     <ClientRouter />
-    <style>
+    <style is:global>
+      main.project {
+        max-width: 960px;
+      }
+
+      /* ---------- HEADER ---------- */
+      .project-back {
+        display: inline-block;
+        font-size: 0.82rem;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted-strong);
+        margin-bottom: clamp(24px, 4vw, 40px);
+      }
+
+      .project-facts {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px 10px;
+        margin: 0 0 14px;
+        padding: 0;
+        list-style: none;
+        font-size: 0.74rem;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--accent);
+      }
+
+      .project-facts li + li::before {
+        content: "·";
+        margin-right: 10px;
+        color: var(--muted);
+      }
+
+      .project-head h1 {
+        font-size: clamp(2.6rem, 7vw, 4.6rem);
+        line-height: 0.95;
+        margin: 0 0 18px;
+      }
+
+      .project-lede {
+        font-size: clamp(1.08rem, 1.7vw, 1.3rem);
+        line-height: 1.5;
+        max-width: 58ch;
+        margin: 0 0 22px;
+        color: var(--text-soft);
+      }
+
+      .project-stack {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 0 0 26px;
+        padding: 0;
+        list-style: none;
+      }
+
+      .project-stack li {
+        font-size: 0.8rem;
+        font-weight: 500;
+        color: var(--muted-strong);
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 5px 12px;
+        background: var(--card);
+      }
+
+      .project-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
       /* Hero video — full-bleed dark band */
       .demo-hero {
         width: 100vw;
@@ -73,31 +152,147 @@ const backLabel = "← Back to side quests";
         filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.12));
       }
       .demo-placeholder__label {
-        font-family: var(--font-mono);
+        font-family: var(--font-body);
+        font-weight: 600;
         font-size: 0.72rem;
-        letter-spacing: 0.18em;
+        letter-spacing: 0.14em;
         text-transform: uppercase;
         color: rgba(255, 255, 255, 0.45);
       }
 
-      /* Inline demo (iframe fallback) */
-      .demo-section {
-        margin: 32px 0;
+      /* ---------- BODY: label on the left, content on the right ---------- */
+      .sheet {
+        display: grid;
+        grid-template-columns: 190px minmax(0, 1fr);
+        column-gap: clamp(24px, 4vw, 56px);
+        margin-top: clamp(28px, 5vw, 48px);
+        overflow-wrap: break-word;
       }
-      .demo-section h2 {
-        font-size: 1.5rem;
-        margin-bottom: 16px;
+
+      .sheet > * {
+        grid-column: 2;
+        margin: 0 0 14px;
       }
+
+      /* Section headings become small labels in the left column. */
+      .sheet > h2 {
+        grid-column: 1;
+        font-family: var(--font-body);
+        font-size: 0.76rem;
+        font-weight: 600;
+        line-height: 1.6;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--accent);
+      }
+
+      /* One rule across both columns at the start of each section. */
+      .sheet > h2,
+      .sheet > h2 + * {
+        margin-top: 14px;
+        padding-top: 26px;
+        border-top: 1px solid var(--border);
+        max-width: none;
+      }
+
+      .sheet > h2:first-child,
+      .sheet > h2:first-child + * {
+        margin-top: 0;
+      }
+
+      .sheet p {
+        max-width: 64ch;
+        line-height: 1.65;
+      }
+
+      .sheet strong {
+        color: var(--text);
+        font-weight: 600;
+      }
+
+      .sheet ul,
+      .sheet ol {
+        padding-left: 0;
+        list-style: none;
+        display: grid;
+        gap: 10px;
+      }
+
+      .sheet li {
+        position: relative;
+        padding-left: 20px;
+        color: var(--text-soft);
+        line-height: 1.55;
+      }
+
+      .sheet li::before {
+        content: "";
+        position: absolute;
+        left: 2px;
+        top: 0.62em;
+        width: 6px;
+        height: 6px;
+        border-radius: 2px;
+        background: var(--accent);
+      }
+
+      .sheet a {
+        color: var(--accent);
+        text-decoration: underline;
+      }
+
+      .sheet table {
+        display: block;
+        max-width: 100%;
+        overflow-x: auto;
+        border-collapse: collapse;
+        font-size: 0.92rem;
+      }
+
+      .sheet thead {
+        display: none;
+      }
+
+      .sheet td {
+        padding: 9px 24px 9px 0;
+        border-bottom: 1px solid var(--border);
+        text-align: left;
+        vertical-align: top;
+        color: var(--text-soft);
+      }
+
+      .sheet td:first-child {
+        white-space: nowrap;
+        font-weight: 600;
+        color: var(--text);
+      }
+
+      .sheet tr:last-child td {
+        border-bottom: 0;
+      }
+
+      .sheet pre {
+        max-width: 100%;
+        overflow-x: auto;
+      }
+
+      .sheet img {
+        max-width: 100%;
+        height: auto;
+      }
+
+      /* ---------- LIVE DEMO ---------- */
       .demo-iframe-wrap {
         position: relative;
         width: 100%;
         aspect-ratio: 16 / 10;
-        border-radius: 18px;
+        border-radius: 14px;
         overflow: hidden;
         border: 1px solid var(--border);
         background: var(--bg-soft);
         box-shadow: var(--shadow);
       }
+
       .demo-iframe-wrap iframe {
         position: absolute;
         inset: 0;
@@ -105,44 +300,28 @@ const backLabel = "← Back to side quests";
         height: 100%;
         border: none;
       }
+
       .demo-fallback {
-        margin-top: 10px;
         font-size: 0.88rem;
         color: var(--muted);
       }
-      .demo-fallback a {
-        color: var(--accent);
-        text-decoration: underline;
-      }
 
-      /* MDX content — let long things reflow on mobile */
-      article {
-        overflow-wrap: break-word;
-      }
-      article table {
-        display: block;
-        width: 100%;
-        max-width: 100%;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        border-collapse: collapse;
-        margin: 16px 0;
-        font-size: 0.9rem;
-      }
-      article table th,
-      article table td {
-        padding: 8px 12px;
-        border-bottom: 1px solid var(--border);
-        text-align: left;
-        white-space: nowrap;
-      }
-      article pre {
-        max-width: 100%;
-        overflow-x: auto;
-      }
-      article img {
-        max-width: 100%;
-        height: auto;
+      @media (max-width: 760px) {
+        .sheet {
+          display: block;
+        }
+        .sheet > h2 {
+          margin-top: 28px;
+          margin-bottom: 12px;
+        }
+        .sheet > h2 + * {
+          margin-top: 0;
+          padding-top: 0;
+          border-top: 0;
+        }
+        .sheet td:first-child {
+          white-space: normal;
+        }
       }
 
       @media (max-width: 640px) {
@@ -157,68 +336,72 @@ const backLabel = "← Back to side quests";
         .demo-hero video {
           border-radius: 8px;
         }
-        .demo-iframe-wrap {
-          border-radius: 14px;
-        }
-        article table {
-          font-size: 0.82rem;
-        }
       }
     </style>
   </head>
   <body>
     <Header world={world} />
-    <main class="container" style="max-width:900px">
-      <a class="btn" href={backHref}>{backLabel}</a>
-      <h1>{project.data.title}</h1>
-      <div class="kicker" style="margin-bottom:10px;">
-        {project.data.year}{project.data.stack?.length ? ` • ${project.data.stack.join(", ")}` : ""}
-      </div>
+    <main class="container project">
+      <a class="project-back" href={backHref}>← Side quests</a>
 
-      {project.data.video ? (
+      <header class="project-head">
+        <ul class="project-facts">
+          {facts.map((f) => <li>{f}</li>)}
+        </ul>
+        <h1>{d.title}</h1>
+        <p class="project-lede">{d.summary}</p>
+        {d.stack?.length ? (
+          <ul class="project-stack" aria-label="Stack">
+            {d.stack.map((s) => <li>{s}</li>)}
+          </ul>
+        ) : null}
+        {(d.live || d.repo) && (
+          <div class="project-actions">
+            {d.live ? <a class="btn primary" href={d.live} target="_blank" rel="noreferrer">{isGame ? "Play" : "Visit site"} ↗</a> : null}
+            {d.repo ? <a class="btn" href={d.repo} target="_blank" rel="noreferrer">Repository ↗</a> : null}
+          </div>
+        )}
+      </header>
+
+      {d.video ? (
         <section class="demo-hero">
           <div class="demo-hero__inner">
             <video controls preload="metadata" playsinline>
-              <source src={project.data.video} type="video/mp4" />
+              <source src={d.video} type="video/mp4" />
             </video>
           </div>
         </section>
-      ) : project.data.demo ? null : (
+      ) : d.demo ? null : (
         <section class="demo-hero demo-hero--empty" aria-label="Demo video coming soon">
           <div class="demo-hero__inner">
             <div class="demo-placeholder">
               <span class="demo-placeholder__play" aria-hidden="true"></span>
-              <span class="demo-placeholder__label">// demo capture coming soon</span>
+              <span class="demo-placeholder__label">Demo capture coming soon</span>
             </div>
           </div>
         </section>
       )}
 
-      <article style="line-height:1.65">
+      <article class="sheet">
         <Content />
+
+        {d.demo ? (
+          <>
+            <h2>Live demo</h2>
+            <div class="demo-iframe-wrap">
+              <iframe
+                src={d.demo}
+                title={`${d.title} live demo`}
+                loading="lazy"
+                allow="clipboard-write"
+              ></iframe>
+            </div>
+            <p class="demo-fallback">
+              If the demo doesn't load, <a href={d.demo} target="_blank" rel="noreferrer">open it in a new tab</a>.
+            </p>
+          </>
+        ) : null}
       </article>
-
-      {project.data.demo ? (
-        <section class="demo-section">
-          <h2>Live Demo</h2>
-          <div class="demo-iframe-wrap">
-            <iframe
-              src={project.data.demo}
-              title={`${project.data.title} live demo`}
-              loading="eager"
-              allow="clipboard-write"
-            ></iframe>
-          </div>
-          <p class="demo-fallback">
-            If the demo doesn't load, <a href={project.data.demo} target="_blank" rel="noreferrer">open it in a new tab</a>.
-          </p>
-        </section>
-      ) : null}
-
-      <div style="margin-top:16px; display:flex; gap:12px; flex-wrap:wrap;">
-        {project.data.repo ? <a class="btn" href={project.data.repo} target="_blank" rel="noreferrer">Repository</a> : null}
-        {project.data.live ? <a class="btn primary" href={project.data.live} target="_blank" rel="noreferrer">{isGame ? "Play" : "Visit"}</a> : null}
-      </div>
     </main>
   </body>
 </html>

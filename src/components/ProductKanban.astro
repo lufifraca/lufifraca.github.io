@@ -21,9 +21,9 @@ const columns: {
   title: string;
   sub: string;
 }[] = [
-  { id: "shipped", title: "Shipped", sub: "// live in the wild" },
-  { id: "in-flight", title: "In Flight", sub: "// building now" },
-  { id: "on-deck", title: "On Deck", sub: "// next up" },
+  { id: "shipped", title: "Shipped", sub: "Live in the wild" },
+  { id: "in-flight", title: "In Flight", sub: "Building now" },
+  { id: "on-deck", title: "On Deck", sub: "Next up" },
 ];
 
 const byStatus = (s: Status) =>
@@ -40,7 +40,7 @@ const updated = today.toLocaleDateString("en-US", {
 
 <div class="kanban-shell">
   <div class="kanban-meta">
-    <span class="kanban-meta__label">// roadmap.board</span>
+    <span class="kanban-meta__label">Roadmap</span>
     <span class="kanban-meta__dot" aria-hidden="true"></span>
     <span class="kanban-meta__updated">updated {updated}</span>
   </div>

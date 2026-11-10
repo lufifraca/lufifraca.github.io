@@ -16,7 +16,7 @@ const games = (
 
 <section class="arcade-select" id="levels">
   <header class="arcade-select__head">
-    <span class="arcade-select__mark">// SELECT CABINET</span>
+    <span class="arcade-select__mark">SELECT CABINET</span>
     <h2 class="arcade-select__title">Level <em>Select</em></h2>
     <p class="arcade-select__sub">
       {games.length} cabinet{games.length === 1 ? "" : "s"} online · insert coin to play
@@ -94,7 +94,7 @@ const games = (
         </span>
       </div>
       <div class="cabinet__plate cabinet__plate--ghost">
-        <span class="cabinet__ghost-plate">// prototyping</span>
+        <span class="cabinet__ghost-plate">prototyping</span>
       </div>
     </div>
   </div>
@@ -119,9 +119,10 @@ const games = (
 
   .arcade-select__mark {
     display: inline-block;
-    font-family: var(--font-mono);
+    font-family: var(--font-body);
+        font-weight: 600;
     font-size: 0.7rem;
-    letter-spacing: 0.22em;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--accent);
     padding: 6px 12px;
