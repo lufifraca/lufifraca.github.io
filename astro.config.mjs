@@ -9,4 +9,9 @@ import { defineConfig } from 'astro/config';
 export default defineConfig({
 	site: 'https://lufifraca.github.io',
 	integrations: [mdx(), sitemap(), react()],
+	// The old studio/arcade split is now one side-quests page.
+	redirects: {
+		'/studio': '/side-quests',
+		'/arcade': '/side-quests',
+	},
 });

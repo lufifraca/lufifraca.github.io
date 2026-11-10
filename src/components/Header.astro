@@ -1,5 +1,5 @@
 ---
-import { RESUME_PRODUCT, RESUME_DESIGN } from "../consts";
+import { RESUME_PRODUCT } from "../consts";
 
 interface Props {
   world?: "home" | "product" | "arcade";
@@ -8,10 +8,10 @@ interface Props {
 const { world = "product" } = Astro.props;
 const isHome = world === "home";
 const isArcade = world === "arcade";
-const resumeUrl = isArcade ? RESUME_DESIGN : RESUME_PRODUCT;
-const resumeLabel = isHome ? "Resume" : isArcade ? "Design CV" : "Product CV";
+const resumeUrl = RESUME_PRODUCT;
+const resumeLabel = "Resume";
 
-const contextLabel = isArcade ? "arcade" : "studio";
+const contextLabel = isArcade ? "side quests" : "work";
 ---
 
 <header class="studio-header" data-world={world} aria-label="Site navigation">
@@ -29,8 +29,7 @@ const contextLabel = isArcade ? "arcade" : "studio";
 
     <nav class="nav" aria-label="Primary navigation">
       <a class="nav__link" href="/">Home</a>
-      <a class="nav__link" href="/studio">Studio</a>
-      <a class="nav__link" href="/arcade">Arcade</a>
+      <a class="nav__link" href="/side-quests">Side Quests</a>
       <a class="nav__link nav__link--cta" href={resumeUrl} target="_blank" rel="noreferrer">
         {resumeLabel} <span aria-hidden="true">↗</span>
       </a>
@@ -199,7 +198,8 @@ const contextLabel = isArcade ? "arcade" : "studio";
   // ------------------------------------------------------------------
   // World-swap transition handler.
   // When the user clicks a rift portal ([data-rift]) or navigates
-  // between / and /arcade, we flag the incoming document so the
+  // between the day-job world and the side-quests world, we flag the
+  // incoming document so the
   // CSS ::view-transition-new(root) keyframes in site.css fire
   // a circle-reveal from the click point.
   // ------------------------------------------------------------------
@@ -220,13 +220,11 @@ const contextLabel = isArcade ? "arcade" : "studio";
   document.addEventListener("astro:before-swap", (ev) => {
     // @ts-expect-error - Astro's TransitionBeforeSwapEvent
     const e = ev as { from: URL; to: URL; newDocument: Document };
-    // Normalize trailing slashes so the check works on both dev and prod
-    const strip = (p: string) => p.replace(/\/$/, "") || "/";
-    const fromPath = strip(e.from.pathname);
-    const toPath = strip(e.to.pathname);
-    // Fire the rift-open animation whenever the user crosses the arcade
-    // boundary — any product-world page ⇄ /arcade.
-    const isWorldSwap = (fromPath === "/arcade") !== (toPath === "/arcade");
+    // Fire the rift-open animation whenever the user crosses between the
+    // light day-job world and the dark side-quests world. Each page declares
+    // its world on <html data-world>, so compare those rather than paths.
+    const isDark = (doc: Document) => doc.documentElement.dataset.world === "arcade";
+    const isWorldSwap = isDark(document) !== isDark(e.newDocument);
 
     // Always clear first so stale state never leaks into a non-swap nav
     delete e.newDocument.documentElement.dataset.worldSwap;

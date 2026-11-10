@@ -1,11 +1,11 @@
 // Global site metadata. Imported across pages, RSS, and sitemap.
 
-export const SITE_TITLE = "Luca Ficano Latimer — Studio";
+export const SITE_TITLE = "Luca Ficano Latimer — Developer Relations at Archil";
 export const SITE_DESCRIPTION =
-  "Product builder and game designer. A dual-world studio portfolio: products on one side, arcade on the other.";
+  "Developer Relations at Archil. Previously forward-deployed engineering at The Sandbox and game design at 505 Games, plus side quests: shipped products and games.";
 
 export const SITE_AUTHOR = "Luca Ficano Latimer";
-export const SITE_TAGLINE = "Products by day. Arcade by night.";
+export const SITE_TAGLINE = "Archil by day. Side quests by night.";
 
 // Three role-specific resumes. Drop the PDFs in /public at these paths.
 // Falls back to /cv.pdf if a role-specific one isn't present.

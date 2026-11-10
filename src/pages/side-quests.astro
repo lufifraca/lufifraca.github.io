@@ -1,5 +1,6 @@
 ---
 import Header from "../components/Header.astro";
+import ProductKanban from "../components/ProductKanban.astro";
 import ArcadeLevelSelect from "../components/ArcadeLevelSelect.astro";
 import Rift from "../components/Rift.astro";
 import { SITE_AUTHOR } from "../consts";
@@ -9,10 +10,10 @@ import { ClientRouter } from "astro:transitions";
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Arcade · {SITE_AUTHOR}</title>
+    <title>Side Quests · {SITE_AUTHOR}</title>
     <meta
       name="description"
-      content="The arcade side of the studio — game design, game-dev projects, and industry work."
+      content="Side quests: the products I ship and the games I make on my own time."
     />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="stylesheet" href="/site.css" />
@@ -117,7 +118,42 @@ import { ClientRouter } from "astro:transitions";
         flex-wrap: wrap;
       }
 
-      /* "Back to studio" footer link */
+      /* Products board heading */
+      .board {
+        padding: clamp(20px, 4vw, 48px) 0 clamp(60px, 9vw, 110px);
+      }
+
+      .board__head {
+        margin-bottom: clamp(24px, 4vw, 44px);
+      }
+
+      .board__mark {
+        font-family: var(--font-mono);
+        font-size: 0.7rem;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        color: var(--accent);
+      }
+
+      .board__head h2 {
+        font-size: clamp(2.2rem, 6vw, 4rem);
+        letter-spacing: -0.03em;
+        margin: 10px 0 8px;
+      }
+
+      .board__head h2 em {
+        font-style: italic;
+        color: var(--accent);
+      }
+
+      .board__head p {
+        margin: 0;
+        color: var(--muted-strong);
+      }
+
+      :target { scroll-margin-top: 90px; }
+
+      /* "Back to work" footer link */
       .exit-link {
         margin-top: 60px;
         text-align: center;
@@ -147,39 +183,47 @@ import { ClientRouter } from "astro:transitions";
       <section class="arcade-hero">
         <div class="arcade-hero__copy">
           <div class="arcade-mark">
-            <span>SIGNAL OK · PRESS START</span>
+            <span>OFF THE CLOCK · PRESS START</span>
           </div>
           <h1>
-            Welcome to the <em>arcade.</em>
+            Side <em>quests.</em>
           </h1>
           <p>
-            This is the other half of the studio — where I make games. Two years at 505 Games
-            on <em>Among the Trolls</em>, two student games in Unity, and a growing list of
-            prototypes. Pick a cabinet below to play.
+            Everything I build on my own time. Full-stack products are on the
+            board, games are in the cabinets.
           </p>
           <div class="cta-row">
-            <a class="btn primary" href="#levels">Pick a level</a>
+            <a class="btn primary" href="#products">Products</a>
+            <a class="btn ghost" href="#levels">Games</a>
           </div>
         </div>
 
-        <!-- symmetric rift back home -->
+        <!-- rift back to the day job -->
         <div class="arcade-home-rift">
           <Rift
             variant="home"
             href="/"
-            label="home."
-            caption="// exit the arcade"
+            label="day job."
+            caption="// back to work"
             riftKey="home"
-            flip
-            ariaLabel="Step back through the rift to the landing page"
+            ariaLabel="Step back through the portal to the home page"
           />
         </div>
+      </section>
+
+      <section class="board" id="products" aria-labelledby="board-heading">
+        <header class="board__head">
+          <span class="board__mark">// THE BOARD</span>
+          <h2 id="board-heading">Products, <em>shipped.</em></h2>
+          <p>What's live, what's in flight, and what's on deck.</p>
+        </header>
+        <ProductKanban />
       </section>
 
       <ArcadeLevelSelect />
 
       <div class="exit-link">
-        <a href="/studio">← exit to studio</a>
+        <a href="/" data-rift="home">← back to the day job</a>
       </div>
     </main>
   </body>

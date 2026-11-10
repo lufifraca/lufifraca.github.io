@@ -1,0 +1,407 @@
+---
+// Quest log — the career track on the landing page.
+//
+// One vertical rail instead of a separate full-bleed section per employer:
+// the active quest (Archil) sits on top, and the completed ones (The Sandbox,
+// 505 Games) sit under it, each closing with the thing that carried over into
+// developer relations.
+---
+
+<section class="log" id="path" aria-labelledby="log-heading">
+  <header class="log__head">
+    <p class="log__kicker">// quest log</p>
+    <h2 id="log-heading">How I got <em>here.</em></h2>
+    <p class="log__lede">
+      Game design taught me to explain systems. Forward-deployed engineering
+      put me next to the developers using them. Developer relations is both.
+    </p>
+  </header>
+
+  <ol class="log__rail">
+    <!-- ============ ACTIVE: ARCHIL ============ -->
+    <li class="quest quest--active" id="archil">
+      <span class="quest__node" aria-hidden="true"></span>
+      <article class="quest__card">
+        <header class="quest__meta">
+          <span class="quest__status">● in progress</span>
+          <span class="quest__when">2026 — now</span>
+        </header>
+        <h3 class="quest__title">Developer Relations <span>at</span> <em>Archil.</em></h3>
+        <p class="quest__org">Archil · full-time</p>
+        <p class="quest__body">
+          The main quest. I work with the developers building on Archil:
+          showing what the platform can do, getting them unstuck, and carrying
+          what they run into back to the team.
+        </p>
+      </article>
+    </li>
+
+    <!-- ============ COMPLETE: THE SANDBOX ============ -->
+    <li class="quest" id="sandbox">
+      <span class="quest__node" aria-hidden="true"></span>
+      <article class="quest__card quest__card--split">
+        <div class="quest__copy">
+          <header class="quest__meta">
+            <span class="quest__status">✓ complete</span>
+            <span class="quest__when">2026 · contract</span>
+          </header>
+          <h3 class="quest__title">Forward Deployed Engineer <span>at</span> <em>The Sandbox.</em></h3>
+          <p class="quest__org">The Sandbox · Creator Platform</p>
+          <ul class="quest__list">
+            <li>
+              Primary technical point of contact for high-profile game creators
+              integrating with the engine, APIs, and SDKs, from onboarding
+              through stable integration.
+            </li>
+            <li>
+              Debugged integration failures end to end: reproduced issues
+              locally, isolated client code from platform behavior, and handed
+              engineering actionable repro packages.
+            </li>
+            <li>
+              Surfaced undocumented API behaviors and edge cases, and turned
+              them into reports that drove SDK and documentation updates.
+            </li>
+            <li>
+              Triaged creator-reported issues and feature gaps, and escalated
+              the patterns across accounts to product and engineering.
+            </li>
+          </ul>
+          <p class="quest__carry">
+            <span>carried over</span>
+            Sitting with developers until their integration works, then fixing
+            the docs so the next one doesn't hit it.
+          </p>
+        </div>
+        <figure class="quest__media">
+          <img src="/images/thesandbox.jpg" alt="The Sandbox Creator Platform" loading="lazy" decoding="async" />
+        </figure>
+      </article>
+    </li>
+
+    <!-- ============ COMPLETE: 505 GAMES ============ -->
+    <li class="quest" id="milan">
+      <span class="quest__node" aria-hidden="true"></span>
+      <article class="quest__card quest__card--split">
+        <div class="quest__copy">
+          <header class="quest__meta">
+            <span class="quest__status">✓ complete ×2</span>
+            <span class="quest__when">summers 2024 + 2025 · milano</span>
+          </header>
+          <h3 class="quest__title">Game Design Intern <span>at</span> <em>505 Games.</em></h3>
+          <p class="quest__org">505 Games · Avantgarden · <em>Among the Trolls</em></p>
+          <ul class="quest__list">
+            <li>
+              Prototyped building and magic mechanics in UE5, plus 3 dungeon
+              levels from modular pieces with smart wall and door behaviors.
+            </li>
+            <li>
+              Owned quest and dialogue flow via the Narrative plugin: 12+
+              quests and 12+ dialogue sequences with event-driven triggers.
+            </li>
+            <li>
+              Authored ~7 Confluence specs with flowcharts and edge cases, and
+              annotated mechanics in Figma, for engineering handoff.
+            </li>
+            <li>
+              Worked daily in Italian across design, engineering, and QA.
+              Relocated to Milan both summers.
+            </li>
+          </ul>
+          <p class="quest__carry">
+            <span>carried over</span>
+            Explaining a system clearly enough that someone else can build it,
+            in two languages.
+          </p>
+        </div>
+        <figure class="quest__media quest__media--pair">
+          <img src="/images/att.jpg" alt="Among the Trolls key art" loading="lazy" decoding="async" />
+          <img src="/images/505-summer-2025.jpg" alt="Milan, summer 2025" loading="lazy" decoding="async" />
+        </figure>
+      </article>
+    </li>
+
+    <!-- ============ ORIGIN ============ -->
+    <li class="quest quest--origin">
+      <span class="quest__node" aria-hidden="true"></span>
+      <p class="quest__origin">
+        <strong>Start:</strong> B.S. Computer Science, Cal Poly Pomona, Dec 2025.
+        Along the way: volunteering at GamesBeat Summit (LA, 2025) and the
+        Crossfire Lounge (SF, 2026).
+      </p>
+    </li>
+  </ol>
+</section>
+
+<style>
+  .log {
+    padding: clamp(64px, 10vw, 120px) 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .log__head {
+    max-width: 60ch;
+    margin-bottom: clamp(36px, 6vw, 64px);
+  }
+
+  .log__kicker {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted-strong);
+    margin: 0 0 12px;
+  }
+
+  .log h2 {
+    font-family: var(--font-display);
+    font-variation-settings: "opsz" 144, "SOFT" 30, "wght" 500;
+    font-size: clamp(2.2rem, 6vw, 4rem);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    margin: 0 0 clamp(16px, 2vw, 24px);
+  }
+
+  .log h2 em,
+  .quest__title em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .log__lede {
+    font-size: clamp(1.02rem, 1.5vw, 1.2rem);
+    line-height: 1.55;
+    color: var(--text-soft);
+    margin: 0;
+  }
+
+  /* ---------- RAIL ---------- */
+  .log__rail {
+    --rail-x: 9px;
+    position: relative;
+    list-style: none;
+    margin: 0;
+    padding: 0 0 0 clamp(36px, 5vw, 64px);
+    display: grid;
+    gap: clamp(24px, 4vw, 40px);
+  }
+
+  .log__rail::before {
+    content: "";
+    position: absolute;
+    left: var(--rail-x);
+    top: 12px;
+    bottom: 12px;
+    border-left: 2px dashed var(--border-strong);
+  }
+
+  .quest {
+    position: relative;
+  }
+
+  .quest__node {
+    position: absolute;
+    left: calc(-1 * clamp(36px, 5vw, 64px));
+    top: 26px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 2px solid var(--ink);
+  }
+
+  .quest--active .quest__node {
+    background: var(--accent);
+    box-shadow: 0 0 0 5px var(--accent-soft);
+    animation: quest-pulse 2.6s ease-in-out infinite;
+  }
+
+  @keyframes quest-pulse {
+    0%, 60%, 100% { box-shadow: 0 0 0 5px var(--accent-soft); }
+    30% { box-shadow: 0 0 0 10px transparent; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .quest--active .quest__node { animation: none; }
+  }
+
+  /* ---------- CARD ---------- */
+  .quest__card {
+    background: var(--card);
+    border: 1.5px solid var(--ink);
+    border-radius: 14px;
+    padding: clamp(20px, 3vw, 34px);
+    box-shadow: 6px 6px 0 0 var(--ink);
+  }
+
+  .quest--active .quest__card {
+    box-shadow: 8px 8px 0 0 var(--accent);
+  }
+
+  .quest__card--split {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    gap: clamp(20px, 3vw, 40px);
+    align-items: start;
+  }
+
+  .quest__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 14px;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+
+  .quest__status {
+    color: var(--muted-strong);
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    padding: 4px 10px;
+  }
+
+  .quest--active .quest__status {
+    color: var(--accent-2);
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+
+  .quest__title {
+    font-size: clamp(1.5rem, 3vw, 2.3rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin: 0 0 8px;
+  }
+
+  .quest--active .quest__title {
+    font-size: clamp(2rem, 5vw, 3.4rem);
+  }
+
+  .quest__title span {
+    font-style: italic;
+    color: var(--muted);
+  }
+
+  .quest__org {
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted-strong);
+    margin: 0 0 16px;
+  }
+
+  .quest__body {
+    font-size: clamp(1.02rem, 1.4vw, 1.15rem);
+    margin: 0;
+  }
+
+  .quest__list {
+    margin: 0 0 18px;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 10px;
+  }
+
+  .quest__list li {
+    position: relative;
+    padding-left: 20px;
+    color: var(--text-soft);
+    line-height: 1.5;
+    font-size: 0.96rem;
+  }
+
+  .quest__list li::before {
+    content: "▸";
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+  }
+
+  .quest__carry {
+    margin: 0;
+    padding-top: 14px;
+    border-top: 1px dashed var(--border-strong);
+    font-size: 0.98rem;
+    color: var(--text);
+    max-width: none;
+  }
+
+  .quest__carry span {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent-2);
+    margin-bottom: 4px;
+  }
+
+  /* ---------- MEDIA ---------- */
+  .quest__media {
+    margin: 0;
+    display: grid;
+    gap: 12px;
+  }
+
+  .quest__media img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border: 1.5px solid var(--ink);
+    border-radius: 8px;
+  }
+
+  /* ---------- ORIGIN ---------- */
+  .quest--origin .quest__node {
+    top: 2px;
+    width: 14px;
+    height: 14px;
+    left: calc(-1 * clamp(36px, 5vw, 64px) + 3px);
+    background: var(--ink);
+  }
+
+  .quest__origin {
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--muted-strong);
+    max-width: 70ch;
+  }
+
+  .quest__origin strong {
+    color: var(--text);
+  }
+
+  @media (max-width: 820px) {
+    .quest__card--split {
+      grid-template-columns: 1fr;
+    }
+    .quest__media--pair {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .log__rail {
+      --rail-x: 6px;
+      padding-left: 28px;
+    }
+    .quest__node {
+      left: -28px;
+      width: 14px;
+      height: 14px;
+    }
+    .quest--origin .quest__node {
+      left: -27px;
+      width: 12px;
+      height: 12px;
+    }
+  }
+</style>

@@ -10,9 +10,10 @@ export async function getStaticPaths() {
 const { project } = Astro.props;
 const { Content } = await render(project);
 const isGame = project.data.kind === "game";
-const world = isGame ? "arcade" : "product";
-const backHref = isGame ? "/arcade" : "/studio";
-const backLabel = isGame ? "← Back to Arcade" : "← Back to Studio";
+// Every project is a side quest now, so they all live in the dark world.
+const world = "arcade";
+const backHref = isGame ? "/side-quests#levels" : "/side-quests#products";
+const backLabel = "← Back to side quests";
 ---
 <html lang="en" data-world={world}>
   <head>

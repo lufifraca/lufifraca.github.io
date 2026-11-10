@@ -1,10 +1,15 @@
 ---
 import Header from "../components/Header.astro";
+import QuestLog from "../components/QuestLog.astro";
 import Rift from "../components/Rift.astro";
-import SandboxFeature from "../components/SandboxFeature.astro";
-import MilanFeature from "../components/MilanFeature.astro";
-import { SITE_TITLE, SITE_DESCRIPTION, RESUME_SWE } from "../consts";
+import { SITE_TITLE, SITE_DESCRIPTION } from "../consts";
 import { ClientRouter } from "astro:transitions";
+import { getCollection } from "astro:content";
+
+// Counts for the side-quests teaser under the portal.
+const projects = await getCollection("projects", ({ data }) => !data.draft).catch(() => []);
+const productCount = projects.filter((p) => p.data.kind === "product").length;
+const gameCount = projects.filter((p) => p.data.kind === "game").length;
 ---
 <html lang="en" data-world="product">
   <head>
@@ -191,83 +196,17 @@ import { ClientRouter } from "astro:transitions";
         padding-top: 4px;
       }
 
-      /* ============== WHAT I DO ============== */
-      .bio {
-        padding: clamp(64px, 10vw, 140px) 0;
+      /* ============== SIDE QUESTS PORTAL ============== */
+      .portal {
+        display: grid;
+        grid-template-columns: 1fr minmax(260px, 380px);
+        gap: clamp(32px, 6vw, 96px);
+        align-items: center;
+        padding: clamp(60px, 10vw, 120px) 0 clamp(80px, 12vw, 140px);
         border-top: 1px solid var(--border);
-        text-align: center;
       }
 
-      .bio__inner {
-        max-width: 64ch;
-        margin: 0 auto;
-      }
-
-      .bio__kicker {
-        font-family: var(--font-mono);
-        font-size: 0.72rem;
-        letter-spacing: 0.22em;
-        text-transform: uppercase;
-        color: var(--muted-strong);
-        margin: 0 0 clamp(16px, 2vw, 24px);
-      }
-
-      .bio h2 {
-        font-family: var(--font-display);
-        font-variation-settings: "opsz" 144, "SOFT" 30, "wght" 500;
-        font-size: clamp(2.2rem, 5vw, 3.6rem);
-        line-height: 1;
-        letter-spacing: -0.03em;
-        margin: 0 0 clamp(20px, 3vw, 32px);
-      }
-
-      .bio h2 em {
-        font-style: italic;
-        color: var(--accent);
-      }
-
-      .bio p {
-        font-family: var(--font-body);
-        font-size: clamp(1rem, 1.4vw, 1.15rem);
-        line-height: 1.65;
-        color: var(--text-soft);
-        margin: 0 0 16px;
-      }
-
-      .bio p strong {
-        font-weight: 600;
-        color: var(--text);
-      }
-
-      .bio p em {
-        font-style: italic;
-        color: var(--accent);
-      }
-
-      .bio__thesis {
-        margin-top: clamp(24px, 3vw, 36px);
-        padding-top: clamp(16px, 2vw, 24px);
-        border-top: 1px dashed var(--border);
-        font-family: var(--font-mono);
-        font-size: 0.78rem;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        color: var(--text);
-      }
-
-      /* ============== PORTALS ============== */
-      .portals {
-        padding: clamp(60px, 10vw, 120px) 0 clamp(80px, 12vw, 160px);
-        border-top: 1px solid var(--border);
-        text-align: center;
-      }
-
-      .portals__head {
-        max-width: 56ch;
-        margin: 0 auto clamp(40px, 6vw, 72px);
-      }
-
-      .portals__kicker {
+      .portal__kicker {
         font-family: var(--font-mono);
         font-size: 0.72rem;
         letter-spacing: 0.22em;
@@ -276,7 +215,7 @@ import { ClientRouter } from "astro:transitions";
         margin: 0 0 12px;
       }
 
-      .portals h2 {
+      .portal h2 {
         font-family: var(--font-display);
         font-variation-settings: "opsz" 144, "SOFT" 30, "wght" 500;
         font-size: clamp(2.2rem, 6vw, 4rem);
@@ -285,49 +224,43 @@ import { ClientRouter } from "astro:transitions";
         margin: 0 0 clamp(16px, 2vw, 24px);
       }
 
-      .portals h2 em {
+      .portal h2 em {
         font-style: italic;
         color: var(--accent);
       }
 
-      .portals__lede {
+      .portal__lede {
         color: var(--text-soft);
         font-size: clamp(1rem, 1.4vw, 1.15rem);
         line-height: 1.55;
-        margin: 0;
+        max-width: 48ch;
+        margin: 0 0 clamp(18px, 2.4vw, 28px);
       }
 
-      .portals__grid {
+      .portal__stats {
         display: flex;
         flex-wrap: wrap;
-        justify-content: center;
-        gap: clamp(32px, 5vw, 72px);
-        max-width: 820px;
-        margin: 0 auto;
+        gap: 10px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
       }
 
-      .portals__cell {
-        position: relative;
-        flex: 0 1 300px;
-        max-width: 320px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 14px;
-      }
-
-      .portals__label {
+      .portal__stats li {
         font-family: var(--font-mono);
         font-size: 0.72rem;
         letter-spacing: 0.12em;
         text-transform: uppercase;
         color: var(--muted-strong);
-        text-align: center;
+        border: 1px solid var(--border-strong);
+        border-radius: 999px;
+        padding: 6px 12px;
       }
 
-      /* (halo stagger is handled inside the Rift component — the new
-         oval portals are light enough that simultaneous pulses read
-         as a paired beat rather than fighting.) */
+      .portal__stats strong {
+        color: var(--text);
+        font-weight: 600;
+      }
 
       /* ============== RESPONSIVE ============== */
       @media (max-width: 900px) {
@@ -341,30 +274,21 @@ import { ClientRouter } from "astro:transitions";
           justify-self: start;
           max-width: 320px;
         }
-        .portals__grid {
-          gap: 60px;
+        .portal {
+          grid-template-columns: 1fr;
+        }
+        .portal__rift {
+          width: min(340px, 100%);
+          margin: 0 auto;
         }
       }
 
       @media (max-width: 520px) {
         .hero h1 {
-          font-size: clamp(2.8rem, 14vw, 4.5rem);
-        }
-        .hero-photo-tape {
-          width: 90px;
-        }
-        .hero-photo {
-          max-width: 280px;
+          font-size: clamp(3rem, 16vw, 5rem);
         }
         .cartridge {
-          width: 100px;
-          height: 60px;
-          left: -14px;
-          bottom: -18px;
-        }
-        .hero-ctas .btn {
-          padding: 12px 18px;
-          font-size: 0.82rem;
+          left: -8px;
         }
       }
     </style>
@@ -374,30 +298,26 @@ import { ClientRouter } from "astro:transitions";
     <Header world="home" />
 
     <main class="container home">
-      <!-- ============== HERO ============== -->
+      <!-- ============== HERO: the day job ============== -->
       <section class="hero">
         <div class="hero-copy">
           <div class="hero-mark">
-            <span>// luca_ficano_latimer · bay area</span>
+            <span>// main quest · developer relations @ archil</span>
           </div>
-
           <h1>
             <span class="line"><span class="accent">Luca</span></span>
             <span class="line">Ficano</span>
             <span class="line">Latimer.</span>
           </h1>
-
           <p class="hero-tagline">
-            <strong>CS grad, product builder, and game designer.</strong>
-            Currently a <em>Forward Deployed Engineer (contract)</em> at The Sandbox,
-            after two summers at 505 Games on <em>Among the Trolls</em> — plus a
-            growing library of shipped products and prototypes.
+            <strong>Developer Relations at Archil.</strong>
+            I help developers build on Archil's cloud file system. Before this:
+            forward-deployed engineering at The Sandbox and two summers of game
+            design at 505 Games in Milan.
           </p>
-
           <div class="hero-ctas">
-            <a class="btn primary" href="#sandbox">The Sandbox · now →</a>
-            <a class="btn ghost" href="#milan">Milan · 505 Games</a>
-            <a class="btn ghost" href="#portals">Apps / Games</a>
+            <a class="btn primary" href="#path">How I got here</a>
+            <a class="btn ghost" href="/side-quests" data-rift="side-quests">Side quests →</a>
           </div>
         </div>
 
@@ -408,88 +328,39 @@ import { ClientRouter } from "astro:transitions";
           </div>
           <div class="hero-photo-caption" aria-hidden="true">// luca.jpg</div>
           <div class="cartridge" aria-hidden="true">
-            <div class="cartridge-label">HOME</div>
+            <div class="cartridge-label">DEVREL</div>
           </div>
         </div>
       </section>
 
-      <!-- ============== WHAT I DO ============== -->
-      <section class="bio" aria-labelledby="bio-heading">
-        <div class="bio__inner">
-          <p class="bio__kicker">// what i do</p>
-          <h2 id="bio-heading">
-            Design, systems, and <em>shipping things.</em>
+      <!-- ============== QUEST LOG: Archil ← The Sandbox ← 505 Games ============== -->
+      <QuestLog />
+
+      <!-- ============== ONE PORTAL: day job → side quests ============== -->
+      <section class="portal" id="side-quests" aria-labelledby="portal-heading">
+        <div class="portal__copy">
+          <p class="portal__kicker">// off the clock</p>
+          <h2 id="portal-heading">
+            Then there are the <em>side quests.</em>
           </h2>
-          <p>
-            I'm a <strong>computer science graduate from Cal Poly Pomona (Dec 2025)</strong>
-            working at the intersection of game design and technical product. Right now I'm a
-            <strong>Forward Deployed Engineer (contract)</strong> on the Creator Platform team at
-            <strong>The Sandbox</strong> — the primary technical point of contact for high-profile
-            game creators integrating with the engine, <em>APIs, and SDKs</em>.
+          <p class="portal__lede">
+            The products I ship and the games I make on my own time live on the
+            other side. Step through.
           </p>
-          <p>
-            Before that, two summers at <strong>505 Games / Avantgarden</strong> in Milan building
-            systems for <em>Among the Trolls</em> — prototyping building and magic mechanics,
-            owning the Narrative plugin for quests and dialogue, and shipping content
-            toward early-access.
-          </p>
-          <p>
-            Outside the studio I ship full-stack web products with
-            <strong>TypeScript, Next.js, Python, SQL, Docker, and AWS</strong> —
-            <a href={RESUME_SWE} target="_blank" rel="noreferrer">SWE resume ↗</a>.
-            Fluent in Jira, Confluence, Perforce, Figma, and Italian/Spanish.
-          </p>
-          <p>
-            Active in the California games scene — volunteered at
-            <strong>GamesBeat Summit</strong> (LA) in 2025 and the
-            <strong>Crossfire Lounge</strong> (SF) in 2026.
-          </p>
+          <ul class="portal__stats">
+            <li><strong>{productCount}</strong> products</li>
+            <li><strong>{gameCount}</strong> games</li>
+          </ul>
         </div>
-      </section>
-
-      <!-- ============== THE SANDBOX (CURRENT ROLE) ============== -->
-      <SandboxFeature />
-
-      <!-- ============== MILAN CINEMATIC ============== -->
-      <MilanFeature />
-
-      <!-- ============== DUAL PORTALS ============== -->
-      <section class="portals" id="portals" aria-labelledby="portals-heading">
-        <div class="portals__head">
-          <p class="portals__kicker">// two destinations</p>
-          <h2 id="portals-heading">
-            Pick your <em>portal.</em>
-          </h2>
-          <p class="portals__lede">
-            Products and case studies live in the studio. Games and prototypes
-            live in the arcade.
-          </p>
-        </div>
-
-        <div class="portals__grid">
-          <div class="portals__cell">
-            <Rift
-              variant="studio"
-              href="/studio"
-              label="studio."
-              caption="// products · case studies"
-              riftKey="studio"
-              ariaLabel="Enter the studio"
-            />
-            <span class="portals__label">products · shipped end-to-end</span>
-          </div>
-
-          <div class="portals__cell">
-            <Rift
-              variant="arcade"
-              href="/arcade"
-              label="arcade."
-              caption="// games · prototypes"
-              riftKey="arcade"
-              ariaLabel="Enter the arcade"
-            />
-            <span class="portals__label">games · prototypes</span>
-          </div>
+        <div class="portal__rift">
+          <Rift
+            variant="arcade"
+            href="/side-quests"
+            label="side quests."
+            caption="// step through"
+            riftKey="side-quests"
+            ariaLabel="Step through the portal to the side quests"
+          />
         </div>
       </section>
     </main>

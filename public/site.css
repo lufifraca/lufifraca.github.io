@@ -1,6 +1,7 @@
 /* ==========================================================================
    THE STUDIO — design system
-   Two worlds: [data-world="product"] (light) and [data-world="arcade"] (dark)
+   Two worlds: [data-world="product"] (light, the day job) and
+   [data-world="arcade"] (dark, the side quests)
    The html element carries data-world, which flips the CSS variables below.
    ========================================================================== */
 
@@ -328,8 +329,8 @@ p {
    RIFT OPEN — click-to-open world-swap transition
    When the user clicks a rift portal, the destination document's <html>
    gets data-world-swap + data-swap-origin (corner coords). View Transitions
-   circle-expand the incoming world out from that corner. Only fires on
-   / <-> /arcade navigations (handled in the Header script).
+   circle-expand the incoming world out from that corner. Only fires when
+   crossing between the light and dark worlds (handled in the Header script).
    ========================================================================== */
 
 /* sane defaults for the transition root */
