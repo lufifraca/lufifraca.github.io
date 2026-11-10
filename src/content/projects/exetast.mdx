@@ -1,0 +1,47 @@
+---
+title: "Exetast"
+slug: "exetast"
+year: 2026
+kind: "product"
+status: "shipped"
+stack: ["LLM red teaming", "Python", "OWASP LLM Top 10", "MITRE ATLAS"]
+summary: "An independent AI red-teaming practice for games. Exetast finds the ways players can trick AI characters, game masters and moderation before they do."
+tagline: "Independent red teaming for AI in games."
+live: "https://exetast.com"
+demo: "https://exetast.com/demo/"
+order: -1
+---
+
+## Overview
+Exetast is an independent red-teaming practice for AI in games. The name comes from the Greek *exetastēs*, "examiner". It finds the ways players can trick a game's AI characters, game masters and moderation before the players do.
+
+## Why games are different
+- **Economies.** An AI character that can hand out gold or items can be talked into handing them out.
+- **Minor safety.** T- and E-rated games put AI features in front of young players.
+- **In-world social engineering.** Players lie to characters in character, and the AI has only their word to go on.
+
+## What we found
+In Exetast's own test shop, text placed in a player's display name made the shopkeeper NPC give away gold in **40 of 40 runs**, each from a fresh game state. It happened on both a strong and a low-cost model, under both a strict and a light prompt. The same attacks typed into chat held on the strong model.
+
+The takeaway: what matters is what text your AI trusts, and what it is allowed to do.
+
+## What gets tested
+- NPCs and companions
+- AI teammates and opponents
+- AI game masters and narrative
+- Player-support agents
+- Text and voice moderation
+- UGC and creation tools
+- AI assistants and avatars outside games
+
+## What a client gets
+- Findings, each with a severity rating and evidence
+- A reproduction rate from repeated fresh-state runs
+- Concrete fixes, and a retest after the fix
+- Every finding mapped to the OWASP Top 10 for LLM Applications and MITRE ATLAS
+
+## What I Built
+- **Maren**, a shopkeeper NPC with real game state, as a test target.
+- An **automated red-team runner** that reruns each attack from a fresh state across model and prompt configurations, so every published success rate has repeated runs behind it.
+- An **attack library** of 75+ patterns, fed by tracking new techniques from public research and real incidents.
+- The **site and playable demo** at exetast.com: plain HTML and CSS, no build step, no trackers, no third-party requests.

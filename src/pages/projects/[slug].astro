@@ -183,7 +183,7 @@ const backLabel = "← Back to side quests";
             </video>
           </div>
         </section>
-      ) : (
+      ) : project.data.demo ? null : (
         <section class="demo-hero demo-hero--empty" aria-label="Demo video coming soon">
           <div class="demo-hero__inner">
             <div class="demo-placeholder">
