@@ -16,3 +16,7 @@ export const RESUME_PRODUCT = "/cv-product.pdf";
 export const RESUME_DESIGN = "/cv-design.pdf";
 export const RESUME_SWE = "/cv-swe.pdf";
 export const RESUME_FALLBACK = "/cv.pdf";
+
+// /site.css lives in /public, so its URL never changes and browsers keep
+// serving a cached copy after a deploy. Stamp each build onto the link.
+export const CSS_HREF = `/site.css?v=${Date.now().toString(36)}`;

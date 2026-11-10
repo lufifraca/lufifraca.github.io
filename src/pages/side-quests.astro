@@ -3,7 +3,7 @@ import Header from "../components/Header.astro";
 import ProductKanban from "../components/ProductKanban.astro";
 import ArcadeLevelSelect from "../components/ArcadeLevelSelect.astro";
 import Rift from "../components/Rift.astro";
-import { SITE_AUTHOR } from "../consts";
+import { SITE_AUTHOR, CSS_HREF } from "../consts";
 import { ClientRouter } from "astro:transitions";
 ---
 <html lang="en" data-world="arcade">
@@ -16,7 +16,7 @@ import { ClientRouter } from "astro:transitions";
       content="Side quests: the products I ship and the games I make on my own time."
     />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="stylesheet" href="/site.css" />
+    <link rel="stylesheet" href={CSS_HREF} />
     <ClientRouter />
     <style>
       main.arcade {

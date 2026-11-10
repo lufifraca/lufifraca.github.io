@@ -1,6 +1,7 @@
 ---
 import Header from "../../components/Header.astro";
 import { ClientRouter } from "astro:transitions";
+import { CSS_HREF } from "../../consts";
 import { getCollection, render } from "astro:content";
 
 export async function getStaticPaths() {
@@ -20,7 +21,7 @@ const backLabel = "← Back to side quests";
     <meta charset="utf-8" />
     <title>{project.data.title} • Luca Ficano Latimer</title>
     <meta name="description" content={project.data.summary} />
-    <link rel="stylesheet" href="/site.css">
+    <link rel="stylesheet" href={CSS_HREF} />
     <ClientRouter />
     <style>
       /* Hero video — full-bleed dark band */

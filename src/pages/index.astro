@@ -2,7 +2,7 @@
 import Header from "../components/Header.astro";
 import QuestLog from "../components/QuestLog.astro";
 import Rift from "../components/Rift.astro";
-import { SITE_TITLE, SITE_DESCRIPTION } from "../consts";
+import { SITE_TITLE, SITE_DESCRIPTION, CSS_HREF } from "../consts";
 import { ClientRouter } from "astro:transitions";
 import { getCollection } from "astro:content";
 
@@ -18,7 +18,7 @@ const gameCount = projects.filter((p) => p.data.kind === "game").length;
     <title>{SITE_TITLE}</title>
     <meta name="description" content={SITE_DESCRIPTION} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="stylesheet" href="/site.css" />
+    <link rel="stylesheet" href={CSS_HREF} />
     <ClientRouter />
     <style>
       :target { scroll-margin-top: 110px; }
