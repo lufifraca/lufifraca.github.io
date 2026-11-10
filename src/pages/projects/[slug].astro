@@ -29,10 +29,6 @@ const facts = [isGame ? "Game" : "Product", String(d.year), isGame ? null : stat
     <link rel="stylesheet" href={CSS_HREF} />
     <ClientRouter />
     <style is:global>
-      main.project {
-        max-width: 960px;
-      }
-
       /* ---------- HEADER ---------- */
       .project-back {
         display: inline-block;
@@ -103,106 +99,140 @@ const facts = [isGame ? "Game" : "Product", String(d.year), isGame ? null : stat
         gap: 12px;
       }
 
-      /* Hero video — full-bleed dark band */
-      .demo-hero {
-        width: 100vw;
-        margin-left: calc(50% - 50vw);
-        background: #0d111f;
-        padding: 32px 0;
-        margin-top: 24px;
-        margin-bottom: 32px;
-      }
-      .demo-hero__inner {
-        max-width: 960px;
-        margin: 0 auto;
-        padding: 0 28px;
-      }
-      .demo-hero video {
-        display: block;
-        width: 100%;
-        border-radius: 12px;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-      }
-
-      /* Placeholder shown when a project has no demo video yet */
-      .demo-placeholder {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 16px;
-        width: 100%;
-        aspect-ratio: 16 / 9;
-        border: 1.5px dashed rgba(255, 255, 255, 0.18);
-        border-radius: 12px;
-        background:
-          repeating-linear-gradient(
-            45deg,
-            rgba(255, 255, 255, 0.03) 0 10px,
-            rgba(255, 255, 255, 0.01) 10px 20px
-          );
-      }
-      .demo-placeholder__play {
-        width: 0;
-        height: 0;
-        border-style: solid;
-        border-width: 14px 0 14px 24px;
-        border-color: transparent transparent transparent rgba(255, 255, 255, 0.35);
-        margin-left: 6px;
-        filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.12));
-      }
-      .demo-placeholder__label {
-        font-family: var(--font-body);
-        font-weight: 600;
-        font-size: 0.72rem;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
-        color: rgba(255, 255, 255, 0.45);
-      }
-
-      /* ---------- BODY: label on the left, content on the right ---------- */
+      /* ---------- BODY ----------
+         Always visible: the overview, with the demo video beside it when
+         there is one. Everything else is a collapsible row underneath. */
       .sheet {
         display: grid;
-        grid-template-columns: 190px minmax(0, 1fr);
-        column-gap: clamp(24px, 4vw, 56px);
-        margin-top: clamp(28px, 5vw, 48px);
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0 clamp(28px, 4vw, 56px);
+        margin-top: clamp(32px, 5vw, 52px);
+        padding-top: clamp(28px, 4vw, 40px);
+        border-top: 1px solid var(--border);
         overflow-wrap: break-word;
       }
 
-      .sheet > * {
-        grid-column: 2;
-        margin: 0 0 14px;
+      .sheet--media {
+        grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+        align-items: start;
       }
 
-      /* Section headings become small labels in the left column. */
-      .sheet > h2 {
+      .sheet > * {
+        grid-column: 1 / -1;
+      }
+
+      .sheet--media > .overview {
         grid-column: 1;
-        font-family: var(--font-body);
+        grid-row: 1;
+      }
+
+      .sheet__media {
+        grid-column: 2;
+        grid-row: 1;
+        margin: 0 0 clamp(28px, 4vw, 44px);
+      }
+
+      .sheet__media video {
+        display: block;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        object-fit: contain;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        background: #000;
+        box-shadow: var(--shadow);
+      }
+
+      .overview .sheet__label {
         font-size: 0.76rem;
         font-weight: 600;
-        line-height: 1.6;
         letter-spacing: 0.14em;
         text-transform: uppercase;
         color: var(--accent);
+        margin: 0 0 12px;
       }
 
-      /* One rule across both columns at the start of each section. */
-      .sheet > h2,
-      .sheet > h2 + * {
-        margin-top: 14px;
-        padding-top: 26px;
+      .overview {
+        padding-bottom: clamp(28px, 4vw, 44px);
+      }
+
+      .overview p {
+        font-size: 1.05rem;
+        line-height: 1.7;
+        max-width: 66ch;
+        margin: 0 0 14px;
+      }
+
+      /* ---------- COLLAPSIBLE SECTIONS ---------- */
+      .fold {
         border-top: 1px solid var(--border);
-        max-width: none;
       }
 
-      .sheet > h2:first-child,
-      .sheet > h2:first-child + * {
-        margin-top: 0;
+      .fold:last-child {
+        border-bottom: 1px solid var(--border);
+      }
+
+      .fold__title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 18px 4px;
+        cursor: pointer;
+        list-style: none;
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: clamp(1.05rem, 1.6vw, 1.25rem);
+        letter-spacing: -0.01em;
+        color: var(--text);
+        transition: color 0.2s ease;
+      }
+
+      .fold__title::-webkit-details-marker {
+        display: none;
+      }
+
+      .fold__title:hover {
+        color: var(--accent);
+      }
+
+      /* plus / minus */
+      .fold__title::after {
+        content: "+";
+        flex: none;
+        width: 28px;
+        height: 28px;
+        display: grid;
+        place-items: center;
+        border: 1px solid var(--border-strong);
+        border-radius: 50%;
+        font-family: var(--font-body);
+        font-weight: 500;
+        font-size: 1.1rem;
+        line-height: 1;
+        color: var(--accent);
+      }
+
+      .fold[open] > .fold__title::after {
+        content: "−";
+      }
+
+      .fold__body {
+        padding: 2px 4px 26px;
+      }
+
+      .fold__body > :last-child {
+        margin-bottom: 0;
       }
 
       .sheet p {
-        max-width: 64ch;
+        color: var(--text-soft);
+      }
+
+      .fold__body p {
+        max-width: 72ch;
         line-height: 1.65;
+        margin: 0 0 14px;
       }
 
       .sheet strong {
@@ -212,17 +242,18 @@ const facts = [isGame ? "Game" : "Product", String(d.year), isGame ? null : stat
 
       .sheet ul,
       .sheet ol {
-        padding-left: 0;
+        margin: 0 0 14px;
+        padding: 0;
         list-style: none;
-        display: grid;
-        gap: 10px;
       }
 
       .sheet li {
         position: relative;
         padding-left: 20px;
+        margin-bottom: 10px;
         color: var(--text-soft);
         line-height: 1.55;
+        break-inside: avoid;
       }
 
       .sheet li::before {
@@ -234,6 +265,15 @@ const facts = [isGame ? "Game" : "Product", String(d.year), isGame ? null : stat
         height: 6px;
         border-radius: 2px;
         background: var(--accent);
+      }
+
+      /* long lists run in two columns where there is room */
+      @media (min-width: 900px) {
+        .fold__body > ul,
+        .fold__body > ol {
+          columns: 2;
+          column-gap: 56px;
+        }
       }
 
       .sheet a {
@@ -285,12 +325,14 @@ const facts = [isGame ? "Game" : "Product", String(d.year), isGame ? null : stat
       .demo-iframe-wrap {
         position: relative;
         width: 100%;
+        max-width: 1000px;
         aspect-ratio: 16 / 10;
         border-radius: 14px;
         overflow: hidden;
         border: 1px solid var(--border);
         background: var(--bg-soft);
         box-shadow: var(--shadow);
+        margin-bottom: 12px;
       }
 
       .demo-iframe-wrap iframe {
@@ -301,40 +343,25 @@ const facts = [isGame ? "Game" : "Product", String(d.year), isGame ? null : stat
         border: none;
       }
 
-      .demo-fallback {
+      .fold__body .demo-fallback {
         font-size: 0.88rem;
         color: var(--muted);
       }
 
-      @media (max-width: 760px) {
-        .sheet {
-          display: block;
+      @media (max-width: 860px) {
+        .sheet--media {
+          grid-template-columns: minmax(0, 1fr);
         }
-        .sheet > h2 {
-          margin-top: 28px;
-          margin-bottom: 12px;
+        .sheet--media > .overview,
+        .sheet__media {
+          grid-column: 1;
+          grid-row: auto;
         }
-        .sheet > h2 + * {
-          margin-top: 0;
-          padding-top: 0;
-          border-top: 0;
+        .sheet__media {
+          margin-bottom: 24px;
         }
         .sheet td:first-child {
           white-space: normal;
-        }
-      }
-
-      @media (max-width: 640px) {
-        .demo-hero {
-          padding: 20px 0;
-          margin-top: 16px;
-          margin-bottom: 24px;
-        }
-        .demo-hero__inner {
-          padding: 0 16px;
-        }
-        .demo-hero video {
-          border-radius: 8px;
         }
       }
     </style>
@@ -363,43 +390,34 @@ const facts = [isGame ? "Game" : "Product", String(d.year), isGame ? null : stat
         )}
       </header>
 
-      {d.video ? (
-        <section class="demo-hero">
-          <div class="demo-hero__inner">
-            <video controls preload="metadata" playsinline>
+      <article class:list={["sheet", { "sheet--media": d.video }]}>
+        {d.video ? (
+          <figure class="sheet__media">
+            <video controls preload="metadata" playsinline poster={d.thumb}>
               <source src={d.video} type="video/mp4" />
             </video>
-          </div>
-        </section>
-      ) : d.demo ? null : (
-        <section class="demo-hero demo-hero--empty" aria-label="Demo video coming soon">
-          <div class="demo-hero__inner">
-            <div class="demo-placeholder">
-              <span class="demo-placeholder__play" aria-hidden="true"></span>
-              <span class="demo-placeholder__label">Demo capture coming soon</span>
-            </div>
-          </div>
-        </section>
-      )}
+          </figure>
+        ) : null}
 
-      <article class="sheet">
         <Content />
 
         {d.demo ? (
-          <>
-            <h2>Live demo</h2>
-            <div class="demo-iframe-wrap">
-              <iframe
-                src={d.demo}
-                title={`${d.title} live demo`}
-                loading="lazy"
-                allow="clipboard-write"
-              ></iframe>
+          <details class="fold">
+            <summary class="fold__title">Live demo</summary>
+            <div class="fold__body">
+              <div class="demo-iframe-wrap">
+                <iframe
+                  src={d.demo}
+                  title={`${d.title} live demo`}
+                  loading="lazy"
+                  allow="clipboard-write"
+                ></iframe>
+              </div>
+              <p class="demo-fallback">
+                If the demo doesn't load, <a href={d.demo} target="_blank" rel="noreferrer">open it in a new tab</a>.
+              </p>
             </div>
-            <p class="demo-fallback">
-              If the demo doesn't load, <a href={d.demo} target="_blank" rel="noreferrer">open it in a new tab</a>.
-            </p>
-          </>
+          </details>
         ) : null}
       </article>
     </main>
