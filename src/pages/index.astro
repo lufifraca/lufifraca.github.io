@@ -51,20 +51,8 @@ const gameCount = projects.filter((p) => p.data.kind === "game").length;
         margin-bottom: clamp(14px, 2vw, 28px);
       }
 
-      .hero-mark::before {
-        content: "";
-        display: inline-block;
-        width: 8px;
-        height: 8px;
-        border-radius: 999px;
-        background: var(--accent);
-        box-shadow: 0 0 0 4px var(--accent-soft);
-        animation: blink 2.6s ease-in-out infinite;
-      }
-
-      @keyframes blink {
-        0%, 60%, 100% { opacity: 1; }
-        30% { opacity: 0.25; }
+      .hero-mark img {
+        border-radius: 6px;
       }
 
       .hero h1 {
@@ -299,6 +287,7 @@ const gameCount = projects.filter((p) => p.data.kind === "game").length;
       <section class="hero">
         <div class="hero-copy">
           <div class="hero-mark">
+            <img src="/images/logos/archil.png" alt="Archil" width="26" height="26" />
             <span>Main quest · Developer Relations at Archil</span>
           </div>
           <h1>

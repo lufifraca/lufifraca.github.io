@@ -17,7 +17,14 @@ const contextLabel = isArcade ? "side quests" : "work";
 <header class="studio-header" data-world={world} aria-label="Site navigation">
   <div class="studio-header__inner">
     <a class="brand" href="/">
-      <span class="brand__mark" aria-hidden="true"></span>
+      <svg class="brand__mark" viewBox="0 0 114 112" aria-hidden="true">
+        <g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round">
+          <path d="M14 8H48V70H100V104H14Z" stroke-width="3.5" />
+          <path d="M20 14H42V76H94V98H20Z" />
+          <path d="M26 20H36V82H88V92H26Z" />
+        </g>
+        <path d="M29 23H33V85H85V89H29Z" fill="currentColor" />
+      </svg>
       <span class="brand__name">L.F.L.</span>
       {!isHome && (
         <>
@@ -72,16 +79,14 @@ const contextLabel = isArcade ? "side quests" : "work";
   }
 
   .brand__mark {
-    width: 14px;
-    height: 14px;
-    border-radius: 4px;
-    background: var(--accent);
-    box-shadow: 3px 3px 0 0 var(--ink);
+    width: 30px;
+    height: 30px;
+    color: var(--accent);
     transition: transform 0.3s ease;
   }
 
   .brand:hover .brand__mark {
-    transform: rotate(-10deg) scale(1.1);
+    transform: scale(1.1);
   }
 
   .brand__name {

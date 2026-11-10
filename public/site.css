@@ -24,9 +24,9 @@
   --muted-strong: #3a4059;
 
   /* Accents — electric blue, with the arcade cyan as a highlight */
-  --accent: #1f4fff;
-  --accent-2: #1438c7;
-  --accent-soft: #e2e9ff;
+  --accent: #4558f9;
+  --accent-2: #2f3fd0;
+  --accent-soft: #e5e8ff;
   --highlight: #00ffd1;
   --ink: #0a0c1a;
 
@@ -44,7 +44,7 @@
 
   /* Background art */
   --page-bg:
-    radial-gradient(1200px 820px at 85% -10%, rgba(31, 79, 255, 0.10), transparent 60%),
+    radial-gradient(1200px 820px at 85% -10%, rgba(69, 88, 249, 0.10), transparent 60%),
     radial-gradient(1100px 640px at -10% 0%, rgba(0, 255, 209, 0.10), transparent 60%),
     var(--bg);
 }

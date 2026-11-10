@@ -20,11 +20,16 @@ interface Stop {
   bullets: string[];
   carry?: string;
   image?: { src: string; alt: string };
+  // Company icon and which company palette the panel takes.
+  logo: string;
+  theme: "games505" | "sandbox" | "archil";
 }
 
 const stops: Stop[] = [
   {
     id: "milan-24",
+    logo: "/images/logos/505-games.png",
+    theme: "games505",
     level: "LV 01",
     name: "505 Games",
     when: "Summer 2024",
@@ -42,6 +47,8 @@ const stops: Stop[] = [
   },
   {
     id: "milan-25",
+    logo: "/images/logos/505-games.png",
+    theme: "games505",
     level: "LV 02",
     name: "505 Games",
     when: "Summer 2025",
@@ -59,6 +66,8 @@ const stops: Stop[] = [
   },
   {
     id: "sandbox",
+    logo: "/images/logos/the-sandbox.png",
+    theme: "sandbox",
     level: "LV 03",
     name: "The Sandbox",
     when: "2026 · contract",
@@ -76,6 +85,8 @@ const stops: Stop[] = [
   },
   {
     id: "archil",
+    logo: "/images/logos/archil.png",
+    theme: "archil",
     level: "LV 04",
     name: "Archil",
     when: "2026 — now",
@@ -117,7 +128,7 @@ const current = stops[stops.length - 1].id;
     <div class="track__rail" role="group" aria-label="Pick a role">
       {stops.map((s) => (
         <label class="stop" for={`q-${s.id}`} data-current={s.id === current ? "true" : undefined}>
-          <span class="stop__node" aria-hidden="true"></span>
+          <img class="stop__node" src={s.logo} alt="" width="36" height="36" />
           <span class="stop__level">{s.level}</span>
           <span class="stop__name">{s.name}</span>
           <span class="stop__when">{s.when}</span>
@@ -127,9 +138,10 @@ const current = stops[stops.length - 1].id;
 
     <div class="track__panels">
       {stops.map((s) => (
-        <article class="panel" data-stop={s.id} data-current={s.id === current ? "true" : undefined}>
+        <article class="panel" data-stop={s.id} data-theme={s.theme} data-current={s.id === current ? "true" : undefined}>
           <div class="panel__copy">
             <header class="panel__meta">
+              <img class="panel__logo" src={s.logo} alt={`${s.name} logo`} width="44" height="44" />
               <span class="panel__status">{s.status}</span>
               <span>{s.level} · {s.when}</span>
             </header>
@@ -200,8 +212,7 @@ const current = stops[stops.length - 1].id;
     margin: 0;
   }
 
-  .log h2 em,
-  .panel__title em {
+  .log h2 em {
     color: var(--accent);
   }
 
@@ -237,7 +248,7 @@ const current = stops[stops.length - 1].id;
     position: absolute;
     left: 0;
     right: 0;
-    top: 9px;
+    top: 17px;
     border-top: 2px dashed var(--border-strong);
   }
 
@@ -252,18 +263,23 @@ const current = stops[stops.length - 1].id;
     transition: color 0.2s ease;
   }
 
+  /* the company icon is the stop marker */
   .stop__node {
-    width: 20px;
-    height: 20px;
+    position: relative;
+    display: block;
+    width: 36px;
+    height: 36px;
     margin-bottom: 10px;
-    border-radius: 50%;
-    background: var(--bg);
+    border-radius: 9px;
     border: 2px solid var(--ink);
-    transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+    opacity: 0.55;
+    filter: grayscale(1);
+    transition: opacity 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
   }
 
   .stop:hover .stop__node {
-    transform: scale(1.15);
+    transform: scale(1.08);
+    opacity: 1;
   }
 
   .stop__level {
@@ -294,26 +310,65 @@ const current = stops[stops.length - 1].id;
     color: var(--accent);
   }
 
-  /* ---------- PANELS ---------- */
+  /* ---------- PANELS ----------
+     Each panel takes its company's palette through these variables. */
   .panel {
+    --p-bg: var(--card);
+    --p-text: var(--text);
+    --p-soft: var(--text-soft);
+    --p-muted: var(--muted);
+    --p-accent: var(--accent);
+    --p-line: var(--border-strong);
+    --p-shadow: var(--ink);
+
     display: none;
     grid-template-columns: minmax(0, 1fr);
     gap: clamp(20px, 3vw, 40px);
     align-items: start;
     min-height: 330px;
-    background: var(--card);
+    background: var(--p-bg);
+    color: var(--p-text);
     border: 1.5px solid var(--ink);
     border-radius: 14px;
     padding: clamp(20px, 3vw, 32px);
-    box-shadow: 6px 6px 0 0 var(--ink);
+    box-shadow: 6px 6px 0 0 var(--p-shadow);
+  }
+
+  /* 505 Games: black with the red of their wordmark */
+  .panel[data-theme="games505"] {
+    --p-bg: #0b0b0c;
+    --p-text: #ffffff;
+    --p-soft: #d6d6d8;
+    --p-muted: #9a9a9f;
+    --p-accent: #f0503a;
+    --p-line: rgba(255, 255, 255, 0.24);
+    --p-shadow: #d4482f;
+  }
+
+  /* The Sandbox: their sky blue, with dark ink for legibility */
+  .panel[data-theme="sandbox"] {
+    --p-bg: #00aeef;
+    --p-text: #03202c;
+    --p-soft: #06303f;
+    --p-muted: #0a4a61;
+    --p-accent: #ffffff;
+    --p-line: rgba(3, 32, 44, 0.3);
+    --p-shadow: #03202c;
+  }
+
+  /* Archil: black and white, like their mark */
+  .panel[data-theme="archil"] {
+    --p-bg: #000000;
+    --p-text: #ffffff;
+    --p-soft: #e2e2e2;
+    --p-muted: #a3a3a3;
+    --p-accent: #ffffff;
+    --p-line: rgba(255, 255, 255, 0.28);
+    --p-shadow: var(--accent);
   }
 
   .panel:has(.panel__media) {
     grid-template-columns: minmax(0, 1fr) minmax(200px, 300px);
-  }
-
-  .panel[data-current] {
-    box-shadow: 8px 8px 0 0 var(--accent);
   }
 
   .panel__meta {
@@ -325,21 +380,23 @@ const current = stops[stops.length - 1].id;
     font-size: 0.7rem;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 12px;
+    color: var(--p-muted);
+    margin-bottom: 14px;
+  }
+
+  .panel__logo {
+    display: block;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    border: 1.5px solid var(--p-line);
   }
 
   .panel__status {
-    color: var(--muted-strong);
-    border: 1px solid var(--border-strong);
+    color: var(--p-text);
+    border: 1px solid var(--p-line);
     border-radius: 999px;
     padding: 4px 10px;
-  }
-
-  .panel[data-current] .panel__status {
-    color: var(--accent-2);
-    border-color: var(--accent);
-    background: var(--accent-soft);
   }
 
   .panel__title {
@@ -347,10 +404,15 @@ const current = stops[stops.length - 1].id;
     line-height: 1.05;
     letter-spacing: -0.03em;
     margin: 0 0 8px;
+    color: var(--p-text);
+  }
+
+  .panel__title em {
+    color: var(--p-accent);
   }
 
   .panel__title span {
-    color: var(--muted);
+    color: var(--p-muted);
   }
 
   .panel__org {
@@ -358,7 +420,7 @@ const current = stops[stops.length - 1].id;
     font-size: 0.74rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--muted-strong);
+    color: var(--p-muted);
     margin: 0 0 16px;
   }
 
@@ -366,6 +428,7 @@ const current = stops[stops.length - 1].id;
     font-size: clamp(1.05rem, 1.5vw, 1.25rem);
     max-width: 60ch;
     margin: 0;
+    color: var(--p-soft);
   }
 
   .panel__list {
@@ -380,7 +443,7 @@ const current = stops[stops.length - 1].id;
   .panel__list li {
     position: relative;
     padding-left: 18px;
-    color: var(--text-soft);
+    color: var(--p-soft);
     line-height: 1.45;
     font-size: 0.92rem;
   }
@@ -389,15 +452,15 @@ const current = stops[stops.length - 1].id;
     content: "▸";
     position: absolute;
     left: 0;
-    color: var(--accent);
+    color: var(--p-accent);
   }
 
   .panel__carry {
     margin: 0;
     padding-top: 12px;
-    border-top: 1px dashed var(--border-strong);
+    border-top: 1px dashed var(--p-line);
     font-size: 0.98rem;
-    color: var(--text);
+    color: var(--p-text);
     max-width: none;
   }
 
@@ -407,7 +470,7 @@ const current = stops[stops.length - 1].id;
     font-size: 0.66rem;
     letter-spacing: 0.18em;
     text-transform: uppercase;
-    color: var(--accent-2);
+    color: var(--p-accent);
     margin-bottom: 4px;
   }
 
@@ -420,7 +483,7 @@ const current = stops[stops.length - 1].id;
     width: 100%;
     aspect-ratio: 4 / 3;
     object-fit: cover;
-    border: 1.5px solid var(--ink);
+    border: 1.5px solid var(--p-line);
     border-radius: 8px;
   }
 
@@ -443,8 +506,9 @@ const current = stops[stops.length - 1].id;
   #q-milan-25:checked ~ .track__rail [for="q-milan-25"] .stop__node,
   #q-sandbox:checked ~ .track__rail [for="q-sandbox"] .stop__node,
   #q-archil:checked ~ .track__rail [for="q-archil"] .stop__node {
-    background: var(--accent);
-    box-shadow: 0 0 0 5px var(--accent-soft);
+    opacity: 1;
+    filter: none;
+    box-shadow: 0 0 0 4px var(--accent-soft), 0 0 0 6px var(--accent);
   }
 
   #q-milan-24:focus-visible ~ .track__rail [for="q-milan-24"],
